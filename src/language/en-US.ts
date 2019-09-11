@@ -486,6 +486,7 @@ export const en_US = {
     Import_mnemonic_operations: 'Import mnemonic operations',
     Imported_wallet_successfully: 'Imported wallet successfully',
     Import_private_key_operation: 'Import private key operation',
+    Import_ledger_account_successfully: 'Import Ledger account successfully',
     Wallet_management: 'Wallet management',
     Public_account: 'PUBLIC',
     Private_account: 'Private account',

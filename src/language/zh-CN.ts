@@ -476,6 +476,7 @@ export const zh_CN = {
     Import_mnemonic_operations: '导入助记词操作',
     Imported_wallet_successfully: '导入钱包成功',
     Import_private_key_operation: '导入私钥操作',
+    Import_ledger_account_successfully: 'Import Ledger account successfully',
     Wallet_management: '钱包管理',
     Public_account: '公共账户',
     Private_account: '私有账户',

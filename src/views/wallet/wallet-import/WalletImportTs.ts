@@ -2,13 +2,15 @@ import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportMnemonic from '@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
+import WalletImportLedger from '@/views/wallet/wallet-import-ledger/WalletImportLedger.vue'
 import {networkTypeList, walletImportNavagatorList} from '@/config/view'
 
 @Component({
     components: {
         WalletImportKeystore,
         WalletImportMnemonic,
-        WalletImportPrivatekey
+        WalletImportPrivatekey,
+        WalletImportLedger
     },
 })
 export class WalletImportTs extends Vue {
@@ -30,7 +32,8 @@ export class WalletImportTs extends Vue {
         keystore: '',
         password: '',
     }
-
+    ledger = {
+    }
 
     jumpToView(n, index) {
         let list = this.navagatorList
@@ -92,7 +95,12 @@ export class WalletImportTs extends Vue {
                     keystore: '',
                     password: '',
                 }
-                break
+                break;
+            case 'ledger':
+                this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
+                this.$store.commit('SET_HAS_WALLET',true)
+                this.success(this['$t']('Successfully_imported_wallet'),'')
+                break;
         }
     }
 

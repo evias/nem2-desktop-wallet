@@ -17,6 +17,8 @@
                                   @closeImport="closeImport"></WalletImportPrivatekey>
           <WalletImportKeystore v-else-if="tabIndex === 2" @toWalletDetails="toWalletDetails"
                                 @closeImport="closeImport"></WalletImportKeystore>
+          <WalletImportLedger v-else-if="tabIndex === 3" @toWalletDetails="toWalletDetails"
+                                @closeImport="closeImport"></WalletImportLedger>
         </div>
       </div>
     </div>

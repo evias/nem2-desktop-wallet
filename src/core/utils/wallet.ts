@@ -100,6 +100,30 @@ export class AppWallet {
         }
     }
 
+    // export const getAccountByLedger = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
+    //     let storeWallet = {}
+    //     storeWallet = {
+    //         name: name,
+    //         address: account.address,
+    //         networkType: netType,
+    //         publicKey: account.publicKey,
+    //         privateKey: "privateKey",
+    //         password: "password",
+    //         publicAccount: account.publicAccount,
+    //         mosaics: [],
+    //         balance: 0,
+    //         algo: "ledger"
+    //     }
+    //     if (!node) return storeWallet
+    //     await setWalletMosaic(storeWallet, node, currentXEM1, currentXEM2).then((data) => {
+    //         storeWallet = data
+    //     })
+    //     await setMultisigAccount(storeWallet, node).then((data) => {
+    //         storeWallet = data
+    //     })
+    //     return storeWallet
+    // }
+
     getAccount(password: Password): Account {
         // @TODO: update after nem2-sdk EncryptedPrivateKey constructor definition is fixed
         // https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/241
