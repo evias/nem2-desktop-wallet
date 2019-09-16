@@ -307,6 +307,7 @@ export const zh_CN = {
     mnemonic: '助记词',
     privatekey: '私钥',
     keystore: 'keystore',
+    ledger: 'Ledger',
     import: '导入',
     mnemonic_describle: '助记词为一个12个单词的种子文件，通过导入本种子文件，可以帮你恢复钱包，请妥善保管和注意保密。',
     input_mnemonic: '输入助记词',
