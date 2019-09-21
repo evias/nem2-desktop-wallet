@@ -1,5 +1,5 @@
 import {
-    LinkAction, AliasAction, MosaicSupplyType, NamespaceType,
+    LinkAction, AliasAction, MosaicSupplyChangeAction, NamespaceRegistrationType,
 } from 'nem2-sdk'
 import {NETWORK_PARAMS, SDK_PARAMS, APP_PARAMS} from './constants'
 
@@ -23,8 +23,8 @@ const {
     NAMESPACE_MAX_LENGTH,
 } = NETWORK_PARAMS
 
-const {availableNetworkTypes, mosaicSupplyTypes} = SDK_PARAMS
-const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = APP_PARAMS
+const {availableNetworkTypes, mosaicSupplyChangeActions} = SDK_PARAMS
+const {MIN_PASSWORD_LENGTH} = APP_PARAMS
 
 
 export const standardFields = {
@@ -193,14 +193,14 @@ export const standardFields = {
         placeholder: 'PLACEHOLDER_mosaicId',
     },
 
-    mosaicSupplyType: {
-        default: MosaicSupplyType.Increase,
-        label: 'mosaicSupplyType',
-        name: 'mosaicSupplyType',
+    MosaicSupplyChangeAction: {
+        default: MosaicSupplyChangeAction.Increase,
+        label: 'MosaicSupplyChangeAction',
+        name: 'MosaicSupplyChangeAction',
         type: 'text',
         validation: 'required',
-        hint: 'HINT_mosaicSupplyType',
-        items: mosaicSupplyTypes,
+        hint: 'HINT_MosaicSupplyChangeAction',
+        items: mosaicSupplyChangeActions,
     },
 
     namespaceDuration: {
@@ -328,7 +328,7 @@ export const standardFields = {
     transferable: {default: true, label: 'Transferable'},
     levyMutable: {default: true, label: 'Mutable-levy'},
     restrictable: {default: true, label: 'Restrictable'},
-    namespaceTypes: {default: NamespaceType.RootNamespace},
+    namespaceTypes: {default: NamespaceRegistrationType.RootNamespace},
 }
 
 export const radioFields = {
@@ -341,8 +341,8 @@ export const radioFields = {
         {label: 'Unlink', type: AliasAction.Unlink},
     ],
     namespaceTypes: [
-        {type: NamespaceType.RootNamespace, label: 'RootNamespace'},
-        {type: NamespaceType.SubNamespace, label: 'SubNamespace'},
+        {type: NamespaceRegistrationType.RootNamespace, label: 'RootNamespace'},
+        {type: NamespaceRegistrationType.SubNamespace, label: 'SubNamespace'},
     ],
 }
 

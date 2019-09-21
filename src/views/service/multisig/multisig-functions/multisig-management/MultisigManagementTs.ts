@@ -1,11 +1,11 @@
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {
-    MultisigCosignatoryModificationType,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction,
     MultisigCosignatoryModification,
     PublicAccount,
     Deadline,
-    ModifyMultisigAccountTransaction,
     UInt64
 } from 'nem2-sdk'
 import {
@@ -38,10 +38,11 @@ export class MultisigManagementTs extends Vue {
     existsCosignerList = [{}]
     showCheckPWDialog = false
     currentCosignatoryList = []
-    showSubPublicKeyList = false
-    MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
-    publicKeyList = []
-    formItems = formDataConfig.multisigManagementForm
+    showSubpublickeyList = false
+    CosignatoryModificationAction = CosignatoryModificationAction
+    publickeyList = []
+
+    formItem = formDataConfig.multisigManagementForm
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1
@@ -122,16 +123,15 @@ export class MultisigManagementTs extends Vue {
 
 
     createCompleteModifyTransaction() {
-        let {multisigPublicKey, cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
-        const {networkType, feeAmount} = this
-        const innerFee = feeAmount / 3
-
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
-        ))
-
-        const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
+        let {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {networkType, xemDivisibility} = this
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const modifyMultisigAccountTx = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -149,15 +149,16 @@ export class MultisigManagementTs extends Vue {
     }
 
     createBondedModifyTransaction() {
-        let {cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
-        const {networkType, publicKey, feeAmount} = this
-        const innerFee = feeAmount / 3
-        const bondedFee = feeAmount / 3
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
-        ))
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        let {cosignerList, bondedFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {networkType, node, publicKey,xemDivisibility} = this
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -223,8 +224,8 @@ export class MultisigManagementTs extends Vue {
         if (cosignerList.length < 1) {
             return true
         }
-        const publicKeyFlag = cosignerList.every((item) => {
-            if (item.type == MultisigCosignatoryModificationType.Add) {
+        const publickeyFlag = cosignerList.every((item) => {
+            if (item.type == CosignatoryModificationAction.Add) {
                 this.hasAddCosigner = true
             }
 

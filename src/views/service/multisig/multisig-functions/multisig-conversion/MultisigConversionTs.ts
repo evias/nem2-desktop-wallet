@@ -1,8 +1,10 @@
 import {
     MultisigCosignatoryModification,
-    MultisigCosignatoryModificationType,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction,
     PublicAccount,
-    ModifyMultisigAccountTransaction, Deadline, UInt64, MultisigAccountInfo,
+    Deadline,
+    UInt64,
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -104,7 +106,7 @@ export class MultisigConversionTs extends Vue {
     }
 
     deleteAddress(index) {
-        this.formItems.publicKeyList.splice(index, 1)
+        this.formItem.publickeyList.splice(index, 1)
     }
 
     confirmInput() {
@@ -126,6 +128,7 @@ export class MultisigConversionTs extends Vue {
         }
         this.sendMultisigConversionTransaction()
         this.initForm()
+        this.sendMultisigConversionTransaction()
         this.showCheckPWDialog = true
     }
 
@@ -186,19 +189,36 @@ export class MultisigConversionTs extends Vue {
         }
     }
 
-    sendMultisigConversionTransaction() {
-        // here lock fee should be relative param
-        let {publicKeyList, minApproval, minRemoval} = this.formItems
-        const {feeAmount} = this
-        const bondedFee = feeAmount/3
-        const innerFee = feeAmount/3
-        const {networkType, publicKey} = this
-        const multisigCosignatoryModificationList = publicKeyList.map(cosigner => new MultisigCosignatoryModification(
-            MultisigCosignatoryModificationType.Add,
-            PublicAccount.createFromPublicKey(cosigner, networkType),
-        ))
+    getMultisigAccountList() {
+        const that = this
+        if (!this.wallet) return
+        const {node, address} = this
+        new MultisigApiRxjs().getMultisigAccountInfo(
+            address,
+            node
+        ).subscribe((multisigInfo) => {
+            if (multisigInfo.cosignatories.length !== 0) {
+                that.isMultisig = true
+            }
+        })
+    }
 
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    sendMultisigConversionTransaction() {
+        const {xemDivisibility} = this
+        // here lock fee should be relative param
+        let {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
+        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const {networkType, node, publickey} = this
+        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+
+        const multisigCosignatoryModificationList = publickeyList
+            .map(cosigner => new MultisigCosignatoryModification(
+                CosignatoryModificationAction.Add,
+                PublicAccount.createFromPublicKey(cosigner, networkType),
+            ))
+
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             minApproval,
             minRemoval,
@@ -206,13 +226,14 @@ export class MultisigConversionTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         )
-        console.log(modifyMultisigAccountTransaction, 'modifyMultisigAccountTransaction')
+
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             publicKey,
             networkType,
             bondedFee,
         )
+
         this.otherDetails = {
             lockFee: feeAmount/3
         }

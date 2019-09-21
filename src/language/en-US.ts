@@ -643,12 +643,16 @@ export const en_US = {
     aggregate_bonded: 'Aggregate Bonded',
     lock: 'Lock',
     secret_lock: 'Secret lock',
-    //secret_proof
     secret_proof: 'Secret proof',
+    link_account: 'Link account',
     modify_account_property_address: 'Address restriction',
     modify_account_property_mosaic: 'Mosaic restriction',
     modify_account_property_entity_type: 'Entity restriction',
-    link_account: 'Link account',
+    mosaic_address_restriction: 'mosaic address restriction',
+    mosaic_global_restriction: 'mosaic global restriction',
+    account_metadata_transaction: 'account metadata transaction',
+    mosaic_metadata_transaction: 'mosaic metadata transaction',
+    namespace_metadata_transaction: 'namespace metadata transaction',
     please_choose_entity_type: 'Please choose entity type',
     Node_connection_failed: 'Node connection failed',
     // Forms

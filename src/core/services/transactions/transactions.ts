@@ -1,4 +1,4 @@
-import {PublicAccount, NetworkType} from "nem2-sdk"
+import {PublicAccount, NetworkType, Transaction} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from './formatting'
 
@@ -43,7 +43,7 @@ export const setTransactionList = (address, that) => {
         pageSize: 100
         },
         node,
-    ).subscribe(async (transactionList) => {
+    ).subscribe(async (transactionList: Transaction[]) => {
         try {
         const txList = transactionFormat(
                 transactionList,
