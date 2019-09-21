@@ -3,7 +3,7 @@ import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, Transaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
 
-export class FormattedModifyAccountRestrictionAddress extends FormattedTransaction {
+export class FormattedAccountRestrictionAddress extends FormattedTransaction {
   dialogDetailMap: any
   icon: any
 

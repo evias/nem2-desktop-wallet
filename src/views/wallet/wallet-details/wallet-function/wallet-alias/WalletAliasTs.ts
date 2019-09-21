@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
+import {Address, AddressAlias, AliasAction, NamespaceId, Password} from "nem2-sdk"
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
@@ -132,7 +132,7 @@ export class WalletAliasTs extends Vue {
 
     addressAlias(type) {
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
-            type ? AliasActionType.Link : AliasActionType.Unlink,
+            type ? AliasAction.Link : AliasAction.Unlink,
             new NamespaceId(this.formItem.alias),
             Address.createFromRawAddress(this.formItem.address),
             this.getWallet.networkType,

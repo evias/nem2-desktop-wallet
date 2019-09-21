@@ -1,4 +1,4 @@
-import {AliasActionType, NamespaceId, MosaicId, Password, Address} from "nem2-sdk"
+import {AliasAction, NamespaceId, MosaicId, Password, Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config/index.ts"
@@ -99,13 +99,13 @@ export class NamespaceUnAliasDialogTs extends Vue {
 
         const transaction = aliasTarget.length >= 40 // quickfix
             ? new NamespaceApiRxjs().addressAliasTransaction(
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 id,
                 Address.createFromRawAddress(aliasTarget),
                 networkType,
                 fee)
             : new NamespaceApiRxjs().mosaicAliasTransaction(
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 id,
                 new MosaicId(hex),
                 networkType,

@@ -1,5 +1,5 @@
 import {mapState} from "vuex"
-import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
+import {AliasAction, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
@@ -132,7 +132,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const password = new Password(this.formItem.password)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
-            AliasActionType.Link,
+            AliasAction.Link,
             new NamespaceId(name),
             new MosaicId(mosaicHex),
             networkType,

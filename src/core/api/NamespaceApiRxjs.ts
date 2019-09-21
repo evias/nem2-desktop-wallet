@@ -7,7 +7,7 @@ import {
     AddressAliasTransaction,
     NamespaceHttp,
     NetworkType,
-    AliasActionType,
+    AliasAction,
     MosaicId,
     Address,
 } from 'nem2-sdk'
@@ -47,7 +47,7 @@ export class NamespaceApiRxjs {
 
     }
 
-    mosaicAliasTransaction(actionType: AliasActionType,
+    mosaicAliasTransaction(actionType: AliasAction,
                            namespaceId: NamespaceId,
                            mosaicId: MosaicId,
                            networkType: NetworkType,
@@ -63,7 +63,7 @@ export class NamespaceApiRxjs {
         )
     }
 
-    addressAliasTransaction(actionType: AliasActionType,
+    addressAliasTransaction(actionType: AliasAction,
                             namespaceId: NamespaceId,
                             address: Address,
                             networkType: NetworkType,
