@@ -6,11 +6,11 @@ import {
     PublicAccount,
     Address,
     MosaicDefinitionTransaction,
-    MosaicProperties,
+    MosaicFlags,
     Deadline,
     UInt64,
     MosaicSupplyChangeTransaction,
-    MosaicSupplyType
+    MosaicSupplyChangeAction
 } from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
@@ -229,24 +229,22 @@ export class MosaicTransactionTs extends Vue {
         const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.wallet.networkType))
-        const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
-            Deadline.create(),
-            nonce,
-            mosaicId,
-            MosaicProperties.create({
-                supplyMutable: supplyMutable,
-                transferable: transferable,
-                divisibility: divisibility,
-                duration: duration ? UInt64.fromUint(duration) : undefined
-            }),
-            networkType,
-            innerFee ? UInt64.fromUint(innerFee) : undefined
-        )
+        const mosaicDefinitionTx = MosaicDefinitionTransaction
+            .create(
+                Deadline.create(),
+                nonce,
+                mosaicId,
+                MosaicFlags.create(supplyMutable, transferable, divisibility), 
+                divisibility,
+                duration ? UInt64.fromUint(duration) : undefined,
+                networkType,
+                innerFee ? UInt64.fromUint(innerFee) : undefined
+            )
 
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTx.mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(supply),
             networkType
         )

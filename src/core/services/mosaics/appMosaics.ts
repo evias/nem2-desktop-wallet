@@ -39,7 +39,7 @@ export const AppMosaics = () => ({
             .getMosaics(toUpdate)
             .pipe(
                 flatMap(x => x),
-                map(x => (new AppMosaic({mosaicInfo: x, hex: x.mosaicId.toHex()}))),
+                map(x => (new AppMosaic({mosaicInfo: x, hex: x.id.toHex()}))),
                 toArray(),
             )
             .toPromise()

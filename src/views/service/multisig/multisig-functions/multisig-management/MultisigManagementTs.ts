@@ -1,12 +1,12 @@
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {
-    MultisigCosignatoryModificationType,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction,
     MultisigCosignatoryModification,
     PublicAccount,
     Address,
     Deadline,
-    ModifyMultisigAccountTransaction,
     UInt64
 } from 'nem2-sdk'
 import {
@@ -43,7 +43,7 @@ export class MultisigManagementTs extends Vue {
     showCheckPWDialog = false
     currentCosignatoryList = []
     showSubpublickeyList = false
-    MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
+    CosignatoryModificationAction = CosignatoryModificationAction
     publickeyList = []
 
     formItem = formDataConfig.multisigManagementForm
@@ -121,12 +121,13 @@ export class MultisigManagementTs extends Vue {
     createCompleteModifyTransaction() {
         let {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         const {networkType, xemDivisibility} = this
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
-        ))
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigAccountTx = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -148,11 +149,12 @@ export class MultisigManagementTs extends Vue {
         const {networkType, node, publicKey,xemDivisibility} = this
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
-        ))
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -234,7 +236,7 @@ export class MultisigManagementTs extends Vue {
             return true
         }
         const publickeyFlag = cosignerList.every((item) => {
-            if (item.type == MultisigCosignatoryModificationType.Add) {
+            if (item.type == CosignatoryModificationAction.Add) {
                 this.hasAddCosigner = true
             }
 

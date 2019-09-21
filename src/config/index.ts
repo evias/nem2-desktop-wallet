@@ -24,10 +24,15 @@ export const transactionTag = {
     [TransactionType.LOCK]: 'lock',
     [TransactionType.SECRET_LOCK]: 'secret_lock',
     [TransactionType.SECRET_PROOF]: 'secret_proof',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS]: 'modify_account_property_address',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC]: 'modify_account_property_mosaic',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION]: 'modify_account_property_entity_type',
-    [TransactionType.LINK_ACCOUNT]: 'link_account'
+    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS]: 'modify_account_property_address',
+    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC]: 'modify_account_property_mosaic',
+    [TransactionType.ACCOUNT_RESTRICTION_OPERATION]: 'modify_account_property_entity_type',
+    [TransactionType.LINK_ACCOUNT]: 'link_account',
+    [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : 'mosaic_address_restriction',
+    [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : 'mosaic_global_restriction',
+    [TransactionType.ACCOUNT_METADATA_TRANSACTION] : 'account_metadata_transaction',
+    [TransactionType.MOSAIC_METADATA_TRANSACTION] : 'mosaic_metadata_transaction',
+    [TransactionType.NAMESPACE_METADATA_TRANSACTION] : 'namespace_metadata_transaction',
 }
 
 export const Message = {
@@ -38,7 +43,6 @@ export const Message = {
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
     PLEASE_ENTER_THE_CORRECT_NUMBER: 'Please_enter_the_correct_number',
     NOTES_SHOULD_NOT_EXCEED_25_CHARACTER: 'Notes_should_not_exceed_25_character',
-
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
     PLEASE_SWITCH_NETWORK: 'walletCreateNetTypeRemind',

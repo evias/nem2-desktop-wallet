@@ -24,7 +24,7 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
             const mosaicAmountViews = mosaics
                 .map(mosaic => {
                     const mosaicView = mosaicViews
-                        .find(({mosaicInfo}) => mosaicInfo.mosaicId.toHex() === mosaic.id.toHex())
+                        .find(({mosaicInfo}) => mosaicInfo.id.toHex() === mosaic.id.toHex())
 
                     if (mosaicView === undefined) throw new Error('A MosaicView was not found')
                     return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)

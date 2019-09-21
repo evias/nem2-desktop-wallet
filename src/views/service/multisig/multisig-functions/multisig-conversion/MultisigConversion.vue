@@ -95,7 +95,7 @@
               <div class="list_item radius" v-for="(i,index) in formItem.publickeyList">
                 <span class="address_alias">{{i}}</span>
                 <span class="action">{{$t('add')}}</span>
-                <img class="delate pointer" @click="deleteAdress(index)"
+                <img class="delate pointer" @click="deleteAddress(index)"
                      src="@/common/img/service/multisig/multisigDelete.png" alt="">
               </div>
             </div>

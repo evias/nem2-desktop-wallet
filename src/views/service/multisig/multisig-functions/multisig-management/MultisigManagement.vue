@@ -25,9 +25,9 @@
               <div @click="currentPublickey = i.value" class="sub_list_item pointer" v-for="i in existsCosignerList">{{i.value}}</div>
             </div>
           </span>
-            <span @click="addCosigner(MultisigCosignatoryModificationType.Add)"
+            <span @click="addCosigner(CosignatoryModificationAction.Add)"
                   class="add_button radius pointer">+</span>
-            <span @click="addCosigner(MultisigCosignatoryModificationType.Remove)"
+            <span @click="addCosigner(CosignatoryModificationAction.Remove)"
                   class="delete_button radius pointer">-</span>
           </div>
           <div class="input_describe">
@@ -118,7 +118,7 @@
 
             <div class="list_item radius" v-for="(i,index) in formItem.cosignerList">
               <span class="address_alias">{{i.publickey}}</span>
-              <span class="action">{{i.type == MultisigCosignatoryModificationType.Add ? $t('add'):$t('cut_back')}}</span>
+              <span class="action">{{i.type == CosignatoryModificationAction.Add ? $t('add'):$t('cut_back')}}</span>
               <img class="delate pointer" @click="removeCosigner(index)"
                    src="@/common/img/service/multisig/multisigDelete.png" alt="">
             </div>
