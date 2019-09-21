@@ -1,5 +1,9 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
+import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
+import {Address, AddressAlias, AliasAction, NamespaceId, Password} from "nem2-sdk"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
 import {StoreAccount, AppInfo, removeLink, saveLocalAlias, readLocalAlias} from "@/core/model"
@@ -106,18 +110,25 @@ export class WalletAliasTs extends Vue {
     submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        this.addAliasToLocalStorage()
+        if (this.aliasListIndex >= 0) {
+            this.addressAlias(false)
+        } else {
+            this.addressAlias(true)
+        }
     }
 
-    addAliasToLocalStorage() {
-        const {address, tag, alias} = this.formItem
-        saveLocalAlias(
-            this.getWallet.address,
-            {
-                tag: tag,
-                alias: alias,
-                address: address
-            })
+    addressAlias(type) {
+        let transaction = new NamespaceApiRxjs().addressAliasTransaction(
+            type ? AliasAction.Link : AliasAction.Unlink,
+            new NamespaceId(this.formItem.alias),
+            Address.createFromRawAddress(this.formItem.address),
+            this.getWallet.networkType,
+            this.formItem.fee
+        )
+        const {node, generationHash} = this
+        const password = new Password(this.formItem.password)
+
+        new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.closeModel()
         this.initLocalAlias()
     }

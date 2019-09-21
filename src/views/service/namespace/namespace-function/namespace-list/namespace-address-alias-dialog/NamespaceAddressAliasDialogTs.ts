@@ -3,8 +3,10 @@ import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {Message, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {formatSeconds, getAbsoluteMosaicAmount} from "@/core/utils"
-import {AppWallet, StoreAccount, AppInfo, DefaultFee, AppNamespace} from "@/core/model"
+import {Address, AddressAlias, AliasAction, NamespaceId, Password} from "nem2-sdk"
+import {AppWallet} from "@/core/utils/wallet.ts"
+import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
+import {mapState} from "vuex"
 
 @Component({
     computed: {
@@ -127,11 +129,11 @@ export class NamespaceAddressAliasDialogTs extends Vue {
 
     addressAlias(type) {
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
-            type ? AliasActionType.Link : AliasActionType.Unlink,
-            new NamespaceId(this.activeNamespace.name),
-            Address.createFromRawAddress(this.formItems.address),
-            this.wallet.networkType,
-            this.feeAmount
+            type ? AliasAction.Link : AliasAction.Unlink,
+            new NamespaceId(this.formItem.alias),
+            Address.createFromRawAddress(this.formItem.address),
+            this.getWallet.networkType,
+            this.formItem.fee
         )
         const {node, generationHash} = this
         const password = new Password(this.formItems.password)

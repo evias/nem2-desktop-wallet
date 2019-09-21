@@ -1,5 +1,4 @@
-import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
-import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
+import {AliasAction, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Message, formDataConfig,networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
@@ -133,8 +132,8 @@ export class MosaicAliasDialogTs extends Vue {
         const {networkType} = this.wallet
         const password = new Password(this.formItems.password)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
-            AliasActionType.Link,
-            new NamespaceId(mosaicName),
+            AliasAction.Link,
+            new NamespaceId(aliasName),
             new MosaicId(hex),
             networkType,
             feeAmount

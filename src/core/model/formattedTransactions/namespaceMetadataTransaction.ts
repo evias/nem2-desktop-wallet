@@ -1,22 +1,21 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, Transaction} from 'nem2-sdk'
-import {defaultNetworkConfig} from '@/config/index.ts';
+import {nodeConfig} from '@/config/index.ts';
 
-export class FormattedModifyAccountRestrictionOperation extends FormattedTransaction {
+export class FormattedNamespaceMetadataTransaction extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
     constructor( tx: Transaction,
                 address: Address,
                 currentXem: string,
-                xemDivisibility: number,
-                store: any) {
-        super(tx, address, currentXem, xemDivisibility, store)
+                xemDivisibility: number) {
+        super(tx, address, currentXem, xemDivisibility)
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + defaultNetworkConfig.XEM,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
         }

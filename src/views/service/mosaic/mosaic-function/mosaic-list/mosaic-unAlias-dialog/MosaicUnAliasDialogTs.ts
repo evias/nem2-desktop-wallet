@@ -1,4 +1,4 @@
-import {AliasActionType, Password, NamespaceId, MosaicId} from "nem2-sdk"
+import {AliasAction, Password} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Message, DEFAULT_FEES, FEE_GROUPS,formDataConfig, defaultNetworkConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
@@ -103,9 +103,9 @@ export class MosaicUnAliasDialogTs extends Vue {
         const password = new Password(this.formItems.password)
         const {hex, name} = this.itemMosaic
         const transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
-            AliasActionType.Unlink,
-            new NamespaceId(name),
-            new MosaicId(hex),
+            AliasAction.Unlink,
+            name,
+            hex,
             networkType,
             feeAmount
         )

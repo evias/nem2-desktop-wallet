@@ -1,5 +1,5 @@
 import {
-    LinkAction, AliasActionType, MosaicSupplyType, NamespaceType,
+    LinkAction, AliasAction, MosaicSupplyType, NamespaceType,
 } from 'nem2-sdk'
 import {NETWORK_PARAMS, SDK_PARAMS, APP_PARAMS} from './constants'
 
@@ -323,7 +323,7 @@ export const standardFields = {
     },
 
     linkActions: {default: LinkAction.Link},
-    aliasLinkActions: {default: AliasActionType.Link},
+    aliasLinkActions: {default: AliasAction.Link},
     supplyMutable: {default: true, label: 'Mutable-supply'},
     transferable: {default: true, label: 'Transferable'},
     levyMutable: {default: true, label: 'Mutable-levy'},
@@ -337,8 +337,8 @@ export const radioFields = {
         {label: 'Unlink', type: LinkAction.Unlink},
     ],
     aliasLinkActions: [
-        {label: 'Link', type: AliasActionType.Link},
-        {label: 'Unlink', type: AliasActionType.Unlink},
+        {label: 'Link', type: AliasAction.Link},
+        {label: 'Unlink', type: AliasAction.Unlink},
     ],
     namespaceTypes: [
         {type: NamespaceType.RootNamespace, label: 'RootNamespace'},

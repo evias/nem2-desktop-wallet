@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
-import {Address, AliasActionType, Deadline} from 'nem2-sdk'
+import {Address, AliasAction, Deadline, TransactionType, UInt64} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -230,7 +230,7 @@ export const formatNamespaces = (namespacesInfo, blockHeight) => namespacesInfo.
             isExpandMore: false,
             namespaceName: name,
             aliasActionType:
-                ns.namespaceInfo.alias.type === 0 ? AliasActionType.Link : AliasActionType.Unlink,
+                ns.namespaceInfo.alias.type === 0 ? AliasAction.Link : AliasAction.Unlink,
             currentAliasType: ns.namespaceInfo.alias.type,
             currentAlias: ns.namespaceInfo.alias.type === 0 ? '' : aliasText
         }
