@@ -1,12 +1,12 @@
-import {QueryParams, TransactionType, NamespaceService, NamespaceHttp, ChainHttp, BlockHttp} from "nem2-sdk"
+import {QueryParams, TransactionType, NamespaceService, NamespaceHttp, BlockHttp} from "nem2-sdk"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import {Message} from "@/config/index.ts"
-import {AppMosaic, ChainStatus} from '@/core/model'
+import {AppMosaic} from '@/core/model'
+import {WebClient} from "@/core/utils/web"
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
     try {
-        that.$store.commit('SET_IS_NODE_HEALTHY', false)
-        const block = await new BlockApiRxjs().getBlockByHeight(node, 1).toPromise()
+        const block = await new BlockHttp(node).getBlockByHeight(1).toPromise()
         that.$store.commit('SET_IS_NODE_HEALTHY', true)
         that.$Notice.success({
             title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''

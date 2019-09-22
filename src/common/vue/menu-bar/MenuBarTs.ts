@@ -170,18 +170,6 @@ export class MenuBarTs extends Vue {
         })
     }
 
-    async getGenerationHash(node) {
-        const that = this
-        await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
-            that.$store.commit('SET_GENERATION_HASH', blockInfo.generationHash)
-        })
-    }
-
-    initNodeList() {
-        const nodeListData = localRead('nodeList')
-        this.nodeList = nodeListData ? JSON.parse(nodeListData) : nodeListConfig
-    }
-
     created() {
         if (isWindows) windowSizeChange()
         this.initNodeList()
