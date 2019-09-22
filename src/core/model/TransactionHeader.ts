@@ -44,11 +44,9 @@ export class TransactionHeader {
 
   constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number, store: any) {
      this.isReceipt = transaction instanceof TransferTransaction
-        && transaction.recipient instanceof Address // @TODO: handle namespaceId
-        && transaction.recipient.plain()  === address.plain()
-
-      const chainStatus: ChainStatus = store.getters.chainStatus
-
+        && transaction.recipientAddress instanceof Address // @TODO: handle namespaceId
+        && transaction.recipientAddress.plain() === address.plain()
+      
      this.tag = this.getTag(transaction)
      this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), xemDivisibility)
      this.icon = this.getIcon(transaction)

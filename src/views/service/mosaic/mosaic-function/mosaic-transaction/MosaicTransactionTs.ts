@@ -226,10 +226,16 @@ export class MosaicTransactionTs extends Vue {
     }
 
     createByMultisig() {
-        const {networkType, feeAmount} = this
-        const {supply, divisibility, transferable, supplyMutable, duration, multisigPublicKey} = this.formItems
-        const innerFee = feeAmount / this.feeDivider
-        const aggregateFee = feeAmount / this.feeDivider
+        const {networkType, xemDivisibility} = this
+        const {
+            supply, divisibility, transferable, supplyMutable,
+            duration, innerFee, aggregateFee, multisigPublickey, restrictable,
+        } = this.formItem
+
+        const absoluteInnerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const absoluteAggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+
+        const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.wallet.networkType))
         const mosaicDefinitionTx = MosaicDefinitionTransaction
@@ -237,11 +243,11 @@ export class MosaicTransactionTs extends Vue {
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicFlags.create(supplyMutable, transferable, divisibility), 
+                MosaicFlags.create(supplyMutable, transferable, restrictable), 
                 divisibility,
                 duration ? UInt64.fromUint(duration) : undefined,
                 networkType,
-                innerFee ? UInt64.fromUint(innerFee) : undefined
+                absoluteInnerFee ? UInt64.fromUint(absoluteInnerFee) : undefined
             )
 
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
@@ -257,7 +263,7 @@ export class MosaicTransactionTs extends Vue {
                 [mosaicDefinitionTx, mosaicSupplyChangeTx],
                 multisigPublicKey,
                 networkType,
-                aggregateFee
+                absoluteAggregateFee
             )
             this.transactionList = [aggregateTransaction]
             return
@@ -266,7 +272,7 @@ export class MosaicTransactionTs extends Vue {
             [mosaicDefinitionTx, mosaicSupplyChangeTx],
             multisigPublicKey,
             networkType,
-            aggregateFee,
+            absoluteAggregateFee,
         )
         this.transactionList = [aggregateTransaction]
     }
@@ -301,18 +307,37 @@ export class MosaicTransactionTs extends Vue {
         this.showCheckDialog()
     }
 
-    @Watch('formItems.multisigPublicKey')
-    onMultisigPublicKeyChange(newPublicKey, oldPublicKey) {
-        if (!newPublicKey || newPublicKey === oldPublicKey) return
-        this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
+    getMultisigAccountList() {
+        const that = this
+        if (!this.wallet) return
+        const {address, node} = this
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
+            })
+        })
     }
 
-    // @TODO: Quickfix before vee-validate
-    @Watch('formItems.supply')
-    onSupplyChange(newVal) {
-        const {MAX_MOSAIC_ATOMIC_UNITS} = NETWORK_PARAMS
-        if (newVal > MAX_MOSAIC_ATOMIC_UNITS) this.formItems.supply = MAX_MOSAIC_ATOMIC_UNITS
-        if (newVal < 0) this.formItems.supply = 0
+    @Watch('formItem.multisigPublickey')
+    async onMultisigPublickeyChange() {
+        const that = this
+        const {multisigPublickey} = this.formItem
+        if (multisigPublickey.length !== 64) {
+            return
+        }
+        if (multisigPublickey.length !== 64) {
+            return
+        }
+        const {node, networkType} = this
+        let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+        const multisigInfo = multisigAccountInfo(address, node)
+        that.currentMinApproval = multisigInfo['minApproval']
+    }
+
+    initData() {
+        this.durationChange()
     }
 
     // @TODO: Quickfix before vee-validate
