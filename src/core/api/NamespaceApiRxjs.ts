@@ -1,7 +1,7 @@
 import {
     Deadline,
     NamespaceId,
-    RegisterNamespaceTransaction,
+    NamespaceRegistrationTransaction,
     UInt64,
     MosaicAliasTransaction,
     AddressAliasTransaction,
@@ -22,7 +22,7 @@ export class NamespaceApiRxjs {
     createdRootNamespace(namespaceName: string, duration: number, networkType: NetworkType, maxFee?: number) {
         const deadline = Deadline.create()
         const durationUint = UInt64.fromUint(duration)
-        return RegisterNamespaceTransaction.createRootNamespace(
+        return NamespaceRegistrationTransaction.createRootNamespace(
             deadline,
             namespaceName,
             durationUint,
@@ -37,7 +37,7 @@ export class NamespaceApiRxjs {
                         maxFee?: number) {
         const deadline = Deadline.create()
 
-        return RegisterNamespaceTransaction.createSubNamespace(
+        return NamespaceRegistrationTransaction.createSubNamespace(
             deadline,
             namespaceName,
             parentNamespace,

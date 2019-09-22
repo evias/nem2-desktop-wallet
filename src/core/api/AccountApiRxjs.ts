@@ -54,23 +54,6 @@ export class AccountApiRxjs {
     getMultisigAccountGraphInfo(address: string, node: string) {
         const accountAddress = Address.createFromRawAddress(address)
         return observableFrom(new AccountHttp(node).getMultisigAccountGraphInfo(accountAddress))
-
-    }
-
-    /**
-     *  encryptMessage
-     * @param message
-     * @param recipientPublicAccount
-     * @param privateKey
-     */
-    encryptMessage(message: string, recipientPublicAccount: any, privateKey: string) {
-        return EncryptedMessage.create(message, recipientPublicAccount, privateKey)
-    }
-
-
-    decryptMessage(encryptMessage: any, senderPublicAccount: any, privateKey: string) {
-        return EncryptedMessage.decrypt(encryptMessage, privateKey, senderPublicAccount)
-
     }
 
     getLinkedPublickey(node: string, address: string) {

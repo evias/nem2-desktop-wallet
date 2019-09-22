@@ -43,8 +43,8 @@ export class TransactionHeader {
 
   constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number) {
      this.isReceipt = transaction instanceof TransferTransaction
-        && transaction.recipient instanceof Address // @TODO: handle namespaceId
-        && transaction.recipient.plain()  === address.plain()
+        && transaction.recipientAddress instanceof Address // @TODO: handle namespaceId
+        && transaction.recipientAddress.plain() === address.plain()
       
      this.tag = this.getTag(transaction)
      this.time = formatNemDeadline(transaction.deadline) 

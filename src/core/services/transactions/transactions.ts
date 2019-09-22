@@ -1,4 +1,4 @@
-import {PublicAccount, NetworkType, Transaction} from "nem2-sdk"
+import {Transaction, Address} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from '@/core/services/transactions'
 
@@ -31,13 +31,11 @@ export const formatAndSave = (  mosaicList,
 
 export const setTransactionList = (address, that) => {
     const context = that
-    let {accountPublicKey, node} = that
-    if (!accountPublicKey || accountPublicKey.length < 64) return
-    const publicAccount = PublicAccount
-        .createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+    const {node} = that
+    const add = Address.createFromRawAddress(address)
 
     new TransactionApiRxjs().transactions(
-        publicAccount,
+        add,
         {
         pageSize: 100
         },

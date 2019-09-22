@@ -220,12 +220,16 @@ export class MosaicTransactionTs extends Vue {
         that.initForm()
     }
 
-
     createByMultisig() {
-        const {node, networkType, xemDivisibility} = this
-        let {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, multisigPublickey} = this.formItem
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+        const {networkType, xemDivisibility} = this
+        const {
+            supply, divisibility, transferable, supplyMutable,
+            duration, innerFee, aggregateFee, multisigPublickey, restrictable,
+        } = this.formItem
+
+        const absoluteInnerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const absoluteAggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+
         const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.wallet.networkType))
@@ -234,11 +238,11 @@ export class MosaicTransactionTs extends Vue {
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicFlags.create(supplyMutable, transferable, divisibility), 
+                MosaicFlags.create(supplyMutable, transferable, restrictable), 
                 divisibility,
                 duration ? UInt64.fromUint(duration) : undefined,
                 networkType,
-                innerFee ? UInt64.fromUint(innerFee) : undefined
+                absoluteInnerFee ? UInt64.fromUint(absoluteInnerFee) : undefined
             )
 
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
@@ -254,7 +258,7 @@ export class MosaicTransactionTs extends Vue {
                 [mosaicDefinitionTx, mosaicSupplyChangeTx],
                 multisigPublickey,
                 networkType,
-                aggregateFee
+                absoluteAggregateFee
             )
             this.transactionList = [aggregateTransaction]
             return
@@ -263,7 +267,7 @@ export class MosaicTransactionTs extends Vue {
             [mosaicDefinitionTx, mosaicSupplyChangeTx],
             multisigPublickey,
             networkType,
-            aggregateFee,
+            absoluteAggregateFee,
         )
         this.transactionList = [aggregateTransaction]
     }
@@ -329,7 +333,6 @@ export class MosaicTransactionTs extends Vue {
         this.showCheckDialog()
     }
 
-
     getMultisigAccountList() {
         const that = this
         if (!this.wallet) return
@@ -357,19 +360,7 @@ export class MosaicTransactionTs extends Vue {
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
         const multisigInfo = multisigAccountInfo(address, node)
         that.currentMinApproval = multisigInfo['minApproval']
-
     }
-
-    // @Watch('formItem', {immediate: true, deep: true})
-    // onFormItemChange() {
-    //     const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
-    //     // isCompleteForm
-    //     if (this.typeList[0].isSelected) {
-    //         this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== ''
-    //         return
-    //     }
-    //     this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== '' && aggregateFee !== '' && lockFee !== '' && multisigPublickey && multisigPublickey.length === 64
-    // }
 
     initData() {
         this.durationChange()

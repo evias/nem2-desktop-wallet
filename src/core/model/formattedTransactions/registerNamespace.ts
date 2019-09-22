@@ -1,13 +1,13 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, RegisterNamespaceTransaction} from 'nem2-sdk'
+import {Address, NamespaceRegistrationTransaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
 
 export class FormattedRegisterNamespace extends FormattedTransaction {
   dialogDetailMap: any
   icon: any
 
-  constructor( tx: RegisterNamespaceTransaction,
+  constructor( tx: NamespaceRegistrationTransaction,
                address: Address,
                currentXem: string,
                xemDivisibility: number) {
