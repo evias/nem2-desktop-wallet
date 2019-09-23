@@ -1,9 +1,9 @@
 export const nodeListConfig: Array<{ value: string, name: string, url: string, isSelected: boolean }> = [
     {
-        value: 'http://13.114.200.132:3000',
-        name: 'jp-5',
-        url: '13.114.200.132',
-        isSelected: false,
+        value: 'http://47.108.88.254:3000',
+        name: 'ntcn',
+        url: '47.108.88.254',
+        isSelected: true,
     },
     {
         value: 'http://52.194.207.217:3000',
