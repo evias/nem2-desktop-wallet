@@ -763,5 +763,8 @@ export const en_US = {
     Add_to_local_address_book: 'Add to local address book',
     contact_list: 'contact list',
     meta_data: 'Metadata',
-    node_exists_error: 'Node already exists'
+    node_exists_error: 'Node already exists',
+    SLOW: 'Slow',
+    NORMAL: 'Normal',
+    FAST: 'Fast',
 }

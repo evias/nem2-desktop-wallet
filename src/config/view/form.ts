@@ -12,7 +12,7 @@ export const formDataConfig = {
     },
     remoteForm: {
         remotePublickey: '',
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicAliasForm: {

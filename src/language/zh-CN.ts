@@ -734,5 +734,8 @@ export const zh_CN = {
     Add_to_local_address_book: '添加到本地地址簿',
     contact_list: '通信录',
     meta_data: 'Metadata',
-    node_exists_error: '节点已存在'
+    node_exists_error: '节点已存在',
+    SLOW: '慢',
+    NORMAL: '正常',
+    FAST: '快',
 }

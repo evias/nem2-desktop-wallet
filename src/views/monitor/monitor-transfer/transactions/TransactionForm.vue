@@ -134,9 +134,9 @@
                     v-validate="'required'"
                     :data-vv-as="$t('fee')"
                     :placeholder="$t('fee')"
-                    class="asset_type">
+            >
               <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
-                {{item.speed}} ({{ item.value }} {{ XEM }})
+                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
               </Option>
             </Select>
           </span>
