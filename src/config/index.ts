@@ -94,13 +94,28 @@ export const Message = {
     MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist',
     HD_WALLET_PATH_ERROR:'hd_wallet_path_error'
 }
+export const FEE_SPEEDS = {
+    SLOW: 'SLOW',
+    NORMAL: 'NORMAL',
+    FAST: 'FAST',
+}
 
 export const nodeConfig = {
     node: 'http://47.108.88.254:3000',
     currentXem: 'nem.xem',
     currentXEM1: '',
     XEM: 'XEM',
-    gas2xemRate: 20000   //  1xem=20000gas
+    gas2xemRate: 20000,   //  1xem=20000gas
+    defaultFees: [
+        {speed: FEE_SPEEDS.SLOW, value: 0.5},
+        {speed: FEE_SPEEDS.NORMAL, value: 1},
+        {speed: FEE_SPEEDS.FAST, value: 2},
+    ],
+    defaultAggregateFees: [
+        {speed: FEE_SPEEDS.SLOW, value: 1.5},
+        {speed: FEE_SPEEDS.NORMAL, value: 3},
+        {speed: FEE_SPEEDS.FAST, value: 6},
+    ]
 }
 
 export const networkConfig = {

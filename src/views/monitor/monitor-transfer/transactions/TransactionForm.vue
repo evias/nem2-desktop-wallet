@@ -10,24 +10,22 @@
       <div class="address flex_center" v-if="hasMultisigAccounts">
         <span class="title">{{$t('sender')}}</span>
         <span class="value radius flex_center">
-          <Select
-            :placeholder="$t('publicKey')"
-            v-model="formItems.multisigPublicKey"
-            class="fee-select"
-          >
-            <Option
-              v-for="item in multisigPublicKeyList"
-              :value="item.publicKey" :key="item.publicKey"
-            >{{ item.address }}
-            </Option>
-          </Select>
+        <Select
+                v-model="formItems.multisigPublickey"
+                :placeholder="$t('Please_select_public_key')"
+                class="asset_type"
+        >
+          <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
+            {{ item.label.substring(0,20) }}******{{item.label.substr(-20,20) }}
+          </Option>
+       </Select>
       </span>
       </div>
 
       <div class="target flex_center">
         <span class="title">{{$t('transfer_target')}}</span>
         <span class="value radius flex_center">
-        <input type="text" v-model="formItems.recipient" :placeholder="$t('receive_address_or_alias')">
+        <input type="text" v-model="formItems.address" :placeholder="$t('receive_address_or_alias')">
       </span>
         <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
         <div v-if="isShowSubAlias" class="selections ">
@@ -142,9 +140,9 @@
                     v-validate="'required'"
                     :data-vv-as="$t('fee')"
                     :placeholder="$t('fee')"
-            >
+                    class="asset_type">
               <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
-                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+                {{item.speed}} ({{ item.value }} {{ XEM }})
               </Option>
             </Select>
           </span>
