@@ -1,20 +1,22 @@
 import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
+import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
 import { networkTypeConfig } from '@/config/view/setting'
-import { walletImportNavagatorConfig } from '@/config/view/wallet'
+import { walletImportNavigatorConfig } from '@/config/view/wallet'
 
 @Component({
     components: {
         WalletImportKeystore,
-        WalletImportPrivatekey
+        WalletImportPrivatekey,
+        AccountImportHardware
     },
 })
 export class WalletImportTs extends Vue {
     tabIndex = 0
     currentTab = 'mnemonic'
     netType = networkTypeConfig
-    navagatorList = walletImportNavagatorConfig
+    navagatorList = walletImportNavigatorConfig
     currentHeadText = ''
     mnemonic = {
         mnemonic: '',

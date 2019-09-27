@@ -12,7 +12,7 @@ export class FormattedSecretProof extends FormattedTransaction {
                 currentXem: string,
                 xemDivisibility: number) {
         super(tx, address, currentXem, xemDivisibility)
-                
+
           this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,

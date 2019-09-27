@@ -1,13 +1,14 @@
-import {Message} from "@/config/index.ts"
+import {defaultNetworkConfig, Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
-import { MosaicId, NamespaceId, AliasType} from "nem2-sdk"
+import {MosaicId, NamespaceId, AliasType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {TransferType} from "@/core/model/TransferType";
-import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor";
+import {TransferType} from "@/core/model/TransferType"
+import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor"
+import {AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -22,8 +23,9 @@ import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor";
 })
 
 export class MonitorInvoiceTs extends Vue {
+    activeAccount: StoreAccount
+    app: AppInfo
     result = ''
-    activeAccount: any
     assetType = ''
     assetAmount = 0
     assetAmounts = 0
@@ -34,9 +36,8 @@ export class MonitorInvoiceTs extends Vue {
     TransferType = TransferType
     isShowDialog = false
     transferTypeList = monitorRecaeiptTransferTypeConfig
-    app: any
     qrInfo = {
-        mosaicHex: '-',
+        mosaicHex: this.$store.state.account.currentXem || defaultNetworkConfig.currentXem,
         mosaicAmount: 0,
         remarks: '',
     }

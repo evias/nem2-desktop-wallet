@@ -1,11 +1,11 @@
 import {Message} from "@/config/index.ts"
-import {AppWallet} from '@/core/utils/wallet.ts'
 import {mapState} from 'vuex'
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {formDataConfig} from "@/config/view/form";
 import {networkTypeConfig} from '@/config/view/setting';
 import {AppLock} from "@/core/utils";
+import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -16,8 +16,8 @@ import {AppLock} from "@/core/utils";
     }
 })
 export class AccountImportMnemonicTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     form = formDataConfig.walletImportMnemonicForm
     NetworkTypeList = networkTypeConfig
     account = {}

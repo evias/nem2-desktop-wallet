@@ -1,11 +1,15 @@
 import {mapState} from 'vuex'
-import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue} from 'vue-property-decorator'
-import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
+import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {CreateWalletType} from "@/core/model/CreateWalletType"
+import {walletStyleSheetType} from '@/config/view/wallet.ts'
+import {MultisigAccountInfo} from 'nem2-sdk'
+import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 
 @Component({
-    components: {DeleteWalletCheck},
+    components: {TheWalletDelete, TheWalletUpdate},
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -14,15 +18,36 @@ import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
     }
 })
 export class WalletSwitchTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     showCheckPWDialog = false
     deleteIndex = -1
     deletecurrent = -1
     walletToDelete: AppWallet | boolean = false
+    thirdTimestamp = 0
+    walletStyleSheetType = walletStyleSheetType
+    showUpdateDialog = false
+    walletToUpdate = {}
+
 
     get walletList() {
-        return this.app.walletList
+        let {walletList} = this.app
+        walletList.sort((a, b) => {
+            return b.createTimestamp - a.createTimestamp
+        })
+        return walletList.map(item => {
+            const walletType = item.accountTitle.substring(0, item.accountTitle.indexOf('-'))
+            switch (walletType) {
+                case CreateWalletType.keyStore:
+                case CreateWalletType.privateKey:
+                    item.stylesheet = walletStyleSheetType.otherWallet
+                    break
+                case CreateWalletType.seed:
+                    item.stylesheet = walletStyleSheetType.seedWallet
+                    break
+            }
+            return item
+        })
     }
 
     get wallet() {
@@ -32,6 +57,16 @@ export class WalletSwitchTs extends Vue {
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1
+    }
+
+    isMultisig(address: string): boolean {
+        const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
+        if (!multisigAccountInfo) return false
+        return multisigAccountInfo.cosignatories.length > 0
+    }
+
+    closeUpdateDialog() {
+        this.showUpdateDialog = false
     }
 
     closeCheckPWDialog() {
@@ -49,14 +84,7 @@ export class WalletSwitchTs extends Vue {
     formatXEMamount(text) {
         return formatXEMamount(text)
     }
-
-    getWalletBalance(address) {
-        const {currentXEM1} = this
-        const accountMosaic = localRead(address) ? JSON.parse(localRead(address)) : {}
-        const resultMosaic = accountMosaic[currentXEM1] ? accountMosaic[currentXEM1].balance : 0
-        return this.formatXEMamount(resultMosaic)
-    }
-
+    
     toImport() {
         this.$emit('toImport')
     }

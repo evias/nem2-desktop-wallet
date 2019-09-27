@@ -1,9 +1,10 @@
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {Password} from 'nem2-sdk'
-import {AppWallet} from '@/core/utils/wallet.ts'
+import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -16,7 +17,7 @@ export class PrivatekeyDialogTs extends Vue {
     QRCode = ''
     show = false
     stepIndex = 0
-    activeAccount: any
+    activeAccount: StoreAccount
     wallet = {
         password: '',
         privatekey: ''
@@ -54,7 +55,7 @@ export class PrivatekeyDialogTs extends Vue {
         try {
             const {privateKey} = new AppWallet(this.getWallet)
                 .getAccount(new Password(this.wallet.password))
-            
+
             this.stepIndex = 1
             this.wallet.password = ''
             this.stepIndex = 1
@@ -82,6 +83,16 @@ export class PrivatekeyDialogTs extends Vue {
                 this.stepIndex = 3
                 break
         }
+    }
+
+    copyPrivatekey() {
+        copyTxt(this.wallet.privatekey).then((data) => {
+            this.$Notice.success({
+                title: this.$t(Message.COPY_SUCCESS) + ''
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
     checkInput() {

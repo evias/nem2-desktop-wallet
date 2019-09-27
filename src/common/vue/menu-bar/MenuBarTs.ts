@@ -1,17 +1,18 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
-import {AppWallet} from '@/core/utils/wallet'
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localSave} from "@/core/utils/utils.ts"
+import {localRead, localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
-import {languageConfig} from "@/config/view/language";
-import {LanguageType} from "@/core/model/LanguageType";
-import {nodeListConfig} from "@/config/view/node";
+import {languageConfig} from "@/config/view/language"
+import {LanguageType} from "@/core/model/LanguageType"
+import {nodeListConfig} from "@/config/view/node"
+import {getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash} from "@/core/utils"
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -24,11 +25,11 @@ import {nodeListConfig} from "@/config/view/node";
 export class MenuBarTs extends Vue {
     NetworkType = NetworkType
     app: any
+    nodeList = []
     activeAccount: any
     isShowNodeList = false
     isWindows = isWindows
     inputNodeValue = ''
-    nodeList = nodeListConfig
     isNowWindowMax = false
     isShowDialog = true
     activePanelList = [false, false, false, false, false, false, false,]
@@ -86,6 +87,7 @@ export class MenuBarTs extends Vue {
         return this.activeAccount.accountName
     }
 
+
     set currentWalletAddress(newActiveWalletAddress) {
         AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
     }
@@ -103,24 +105,51 @@ export class MenuBarTs extends Vue {
         minWindow()
     }
 
-    selectEndpoint(index) {
+    removeNode(index) {
+        this.nodeList.splice(index, 1)
+        localSave('nodeList', JSON.stringify(this.nodeList))
+    }
+
+    async selectEndpoint(index) {
+        if (this.node == this.nodeList[index].value) return
         this.nodeList.forEach(item => item.isSelected = false)
         this.nodeList[index].isSelected = true
+        const node = this.nodeList[index].value
         this.$store.commit('SET_NODE', this.nodeList[index].value)
+        await getNetworkGenerationHash(node, this)
+        await getCurrentBlockHeight(node, this.$store)
+        await getCurrentNetworkMosaic(node, this.$store)
     }
+
+    checkNodeInput() {
+        let {nodeList, inputNodeValue} = this
+        if (inputNodeValue == '') {
+            this.$Message.destroy()
+            this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
+            return false
+        }
+        const flag = nodeList.find(item => item.url == inputNodeValue)
+        if (flag) {
+            this.$Message.destroy()
+            this.$Message.error(this['$t'](Message.NODE_EXISTS_ERROR))
+            return false
+        }
+        return true
+    }
+
 
     // @TODO: vee-validate
     changeEndpointByInput() {
-        let inputValue = this.inputNodeValue
-        if (inputValue == '') {
-            this.$Message.destroy()
-            this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
-            return
-        }
-        if (inputValue.indexOf(':') == -1) {
-            inputValue = "http://" + inputValue + ':3000'
-        }
-        this.$store.commit('SET_NODE', inputValue)
+        let {nodeList, inputNodeValue} = this
+        if (!this.checkNodeInput()) return
+        nodeList.push({
+            value: `${inputNodeValue}`,
+            name: inputNodeValue,
+            url: inputNodeValue,
+            isSelected: false,
+        })
+        this.nodeList = nodeList
+        localSave('nodeList', JSON.stringify(nodeList))
     }
 
     toggleNodeList() {
@@ -130,7 +159,6 @@ export class MenuBarTs extends Vue {
     switchPanel(index) {
         if (!this.app.walletList.length) return
         const routerIcon = routers[0].children
-
         this.$router.push({
             params: {},
             name: routerIcon[index].name
@@ -147,7 +175,20 @@ export class MenuBarTs extends Vue {
         })
     }
 
+    async getGenerationHash(node) {
+        const that = this
+        await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
+            that.$store.commit('SET_GENERATION_HASH', blockInfo.generationHash)
+        })
+    }
+
+    initNodeList() {
+        const nodeListData = localRead('nodeList')
+        this.nodeList = nodeListData ? JSON.parse(nodeListData) : nodeListConfig
+    }
+
     created() {
         if (isWindows) windowSizeChange()
+        this.initNodeList()
     }
 }

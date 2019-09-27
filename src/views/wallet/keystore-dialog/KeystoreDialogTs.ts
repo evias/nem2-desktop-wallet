@@ -1,9 +1,9 @@
 import {Message} from "@/config/index.ts"
-import {AppWallet} from "@/core/utils/wallet.ts"
 import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password} from "nem2-sdk"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -13,7 +13,7 @@ import {Password} from "nem2-sdk"
     }
 })
 export class KeystoreDialogTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     stepIndex = 0
     show = false
     QRCode = ''
