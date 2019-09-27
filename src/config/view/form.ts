@@ -11,7 +11,7 @@ export const formDataConfig = {
         isEncrypted: true
     },
     remoteForm: {
-        remotePublicKey: '',
+        remotePublickey: '',
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },

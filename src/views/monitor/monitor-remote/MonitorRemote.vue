@@ -83,7 +83,7 @@
 
       <div class="gray_input_content">
         <span class="title">{{$t('remote_modal_pul')}}</span>
-        <input type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
+        <input type="text" v-model="formItems.remotePublickey" :placeholder="$t('remote_modal_place1')">
       </div>
       <div class="gray_input_content">
         <span class="title">{{$t('fee')}}</span>

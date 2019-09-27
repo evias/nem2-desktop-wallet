@@ -746,12 +746,4 @@ export const zh_CN = {
     SLOW: '慢',
     NORMAL: '正常',
     FAST: '快',
-    //////////////////////////////////////////////0927
-    seed_wallet_can_not_be_more_than_10: '本账户创建钱包数量已达上限，请更换账户以创建新钱包。',
-    create_or_import: '创建或导入',
-    create_sub_wallet: '创建子钱包',
-    Import_private_key: '导入私钥',
-    copy_mnemonic: '复制助记词',
-    Harvesting:'收获',
-    ILLEGAL_PUBLICKEY_ERROR:'public key格式错误'
 }

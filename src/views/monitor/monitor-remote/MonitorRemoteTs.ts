@@ -4,7 +4,9 @@ import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "ne
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
+import {formDataConfig} from "@/config/view/form";
+import {AppWallet, StoreAccount} from "@/core/model"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     computed: {
@@ -19,7 +21,7 @@ export class MonitorRemoteTs extends Vue {
     harvestBlockList = []
     isLinkToRemote = false
     isShowDialog = false
-    remotePublicKey = ''
+    remotePublickey = ''
     formItems = formDataConfig.remoteForm
     XEM = defaultNetworkConfig.XEM
 
@@ -47,14 +49,8 @@ export class MonitorRemoteTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get defaultFees(): DefaultFee[] {
-        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
-    }
-
-    get feeAmount() {
-        const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    get defaultFees() {
+      return defaultNetworkConfig.defaultFees
     }
 
     initForm() {
@@ -79,9 +75,9 @@ export class MonitorRemoteTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {remotePublicKey, password} = this.formItems
-        if (remotePublicKey.length !== 64) {
-            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLIC_KEY_ERROR) + '')
+        const {remotePublickey, password} = this.formItems
+        if (remotePublickey.length !== 64) {
+            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
             return false
         }
         if (!password || password.trim() == '') {
@@ -108,9 +104,10 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        const {remotePublicKey, password} = this.formItems
-        const {generationHash, node, networkType, isLinked} = this
-        const {feeAmount} = this
+        const {remotePublickey, feeSpeed, password} = this.formItems
+        const {generationHash, node, networkType, xemDivisibility, isLinked} = this
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const fee = getAbsoluteMosaicAmount(feeAmount, xemDivisibility)
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             remotePublicKey,
@@ -141,7 +138,7 @@ export class MonitorRemoteTs extends Vue {
                 that.remotePublicKey = ''
                 if (Number(that.remotePublicKey) != 0) {
                     // switch on
-                    that.formItems.remotePublicKey = that.remotePublicKey
+                    that.formItems.remotePublickey = that.remotePublickey
                     that.isLinked = true
                     return
                 }
