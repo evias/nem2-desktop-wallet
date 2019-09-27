@@ -1,20 +1,12 @@
 import {NetworkType} from "nem2-sdk"
+import {FEE_SPEEDS} from '@/config'
 
 export const formDataConfig = {
-    multisigTransferForm: {
+    transferForm: {
         address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
         remark: '',
         multisigPublickey: '',
-        innerFee: 1,
-        lockFee: 10,
-        aggregateFee: 1,
-        mosaicTransferList: [],
-        isEncrypted: true
-    },
-    transferForm: {
-        fee: 0.5,
-        remark: '',
-        address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
+        feeSpeed: FEE_SPEEDS.NORMAL,
         mosaicTransferList: [],
         isEncrypted: true
     },

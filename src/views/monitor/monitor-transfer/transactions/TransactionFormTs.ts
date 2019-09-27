@@ -11,6 +11,7 @@ import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {formDataConfig} from '@/config/view/form'
+import {defaultNetworkConfig} from '@/config/index'
 
 @Component({
     components: {
@@ -39,10 +40,11 @@ export class TransactionFormTs extends Vue {
     currentMosaic: string = ''
     currentAmount: number = 0
     isAddressMapNull = true
-    formItem = formDataConfig.multisigTransferForm
+    formItems = formDataConfig.transferForm
     standardFields: object = standardFields
     getRelativeMosaicAmount = getRelativeMosaicAmount
-
+    XEM: string = defaultNetworkConfig.XEM
+  
     get addressAliasMap() {
         const addressAliasMap = this.activeAccount.addressAliasMap
         for (let item in addressAliasMap) {
@@ -51,6 +53,11 @@ export class TransactionFormTs extends Vue {
         }
         this.isAddressMapNull = true
         return addressAliasMap
+    }
+
+    get defaultFees() {
+      const {defaultFees, defaultAggregateFees} = defaultNetworkConfig
+      return this.isSelectedAccountMultisig ? defaultAggregateFees : defaultFees
     }
 
     get isSelectedAccountMultisig(): boolean {
@@ -108,7 +115,7 @@ export class TransactionFormTs extends Vue {
     }
 
     get currentXem() {
-        return this.activeAccount.currentXem
+        return this.activeAccount.currentXEM1
     }
 
     get accountAddress() {
@@ -169,37 +176,28 @@ export class TransactionFormTs extends Vue {
             }))
     }
 
-
     initForm() {
-        this.formItem = {
-            address: '',
-            mosaicTransferList: [],
-            remark: '',
-            multisigPublickey: this.accountPublicKey,
-            innerFee: 1,
-            lockFee: 10,
-            isEncrypted: true,
-            aggregateFee: 1,
-        }
+        this.formItems = formDataConfig.transferForm
+        this.formItems.multisigPublickey = this.accountPublicKey
         this.resetFields()
     }
 
     addMosaic() {
         const {currentMosaic, mosaics, currentAmount} = this
         const {divisibility} = mosaics[currentMosaic].properties
-        const mosaicTransferList = [...this.formItem.mosaicTransferList]
+        const mosaicTransferList = [...this.formItems.mosaicTransferList]
         const that = this
         let resultAmount = currentAmount
         mosaicTransferList.every((item, index) => {
                 if (item.id.toHex() == currentMosaic) {
                     resultAmount = Number(getRelativeMosaicAmount(item.amount.compact(), divisibility)) + Number(resultAmount)
-                    that.formItem.mosaicTransferList.splice(index, 1)
+                    that.formItems.mosaicTransferList.splice(index, 1)
                     return false
                 }
                 return true
             }
         )
-        this.formItem.mosaicTransferList.unshift(
+        this.formItems.mosaicTransferList.unshift(
             new Mosaic(
                 new MosaicId(currentMosaic),
                 UInt64.fromUint(
@@ -210,12 +208,12 @@ export class TransactionFormTs extends Vue {
     }
 
     removeMosaic(index) {
-        this.formItem.mosaicTransferList.splice(index, 1)
+        this.formItems.mosaicTransferList.splice(index, 1)
     }
 
     async submit() {
         // get alias
-        let {address} = this.formItem
+        let {address} = this.formItems
         await this.getAddressByAlias()
         const that = this
         if (!address || address.length < 40) {
@@ -237,8 +235,10 @@ export class TransactionFormTs extends Vue {
 
     showDialog() {
         const {accountPublicKey, isSelectedAccountMultisig} = this
-        let {address, remark, mosaicTransferList, isEncrypted, innerFee, lockFee, aggregateFee} = this.formItem
+        const {address, remark, mosaicTransferList, isEncrypted, feeSpeed} = this.formItems
         const publicKey = isSelectedAccountMultisig ? accountPublicKey : '(self)' + accountPublicKey
+        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const lockFee = fee / 3
 
         this.transactionDetail = {
             "transaction_type": isSelectedAccountMultisig ? 'Multisig_transfer' : 'ordinary_transfer',
@@ -247,13 +247,14 @@ export class TransactionFormTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": isSelectedAccountMultisig ? innerFee + lockFee + aggregateFee + 'XEM' : innerFee + 'XEM',
+            "fee": fee + 'XEM',
             "remarks": remark,
             "encryption": isEncrypted,
         }
-        this.otherDetails = {
+        this.otherDetails = isSelectedAccountMultisig ? {
             lockFee: lockFee
-        }
+        } : {}
+
         if (isSelectedAccountMultisig) {
             this.sendMultisigTransaction()
             this.showCheckPWDialog = true
@@ -264,9 +265,10 @@ export class TransactionFormTs extends Vue {
     }
 
     sendTransaction() {
-        let {address, remark, innerFee, mosaicTransferList, isEncrypted} = this.formItem
+        let {address, remark, feeSpeed, mosaicTransferList, isEncrypted} = this.formItems
         const {xemDivisibility, networkType} = this
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const innerFee = getAbsoluteMosaicAmount(fee, xemDivisibility)
 
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
@@ -284,9 +286,11 @@ export class TransactionFormTs extends Vue {
             return
         }
         const {networkType, xemDivisibility} = this
-        let {address, innerFee, aggregateFee, mosaicTransferList, isEncrypted, remark, multisigPublickey} = this.formItem
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+        let {address, feeSpeed, mosaicTransferList, isEncrypted, remark, multisigPublickey} = this.formItems
+        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const innerFee = getAbsoluteMosaicAmount(fee/3, xemDivisibility)
+        const aggregateFee = getAbsoluteMosaicAmount(fee/3, xemDivisibility)
+
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,
@@ -318,7 +322,7 @@ export class TransactionFormTs extends Vue {
 
 
     async checkForm() {
-        const {address, innerFee, mosaicTransferList, lockFee, aggregateFee, multisigPublickey} = this.formItem
+        const {address, mosaicTransferList, multisigPublickey} = this.formItems
 
         // multisig check
         if (multisigPublickey.length < 64) {
@@ -327,20 +331,6 @@ export class TransactionFormTs extends Vue {
         }
         if (address.length < 40) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
-            return false
-        }
-
-        if ((!Number(aggregateFee) && Number(aggregateFee) !== 0) || Number(aggregateFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-            return false
-        }
-
-        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-            return false
-        }
-        if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
             return false
         }
         if (mosaicTransferList.length < 1) {
@@ -360,7 +350,7 @@ export class TransactionFormTs extends Vue {
     async getAddressByAlias() {
         const {node} = this
         const that = this
-        let addressAlias = this.formItem.address
+        let addressAlias = this.formItems.address
         if (addressAlias.indexOf('@') == -1) {
             return
         }
@@ -391,7 +381,7 @@ export class TransactionFormTs extends Vue {
     }
 
 
-    @Watch('formItem.multisigPublickey')
+    @Watch('formItems.multisigPublickey')
     onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
