@@ -21,6 +21,7 @@ import {
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {defaultNetworkConfig, formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppWallet, DefaultFee} from "@/core/model"
+import {NETWORK_PARAMS} from '@/core/validation'
 
 @Component({
     components: {
@@ -115,16 +116,18 @@ export class MosaicTransactionTs extends Vue {
         this.formItems.multisigPublickey = this.accountPublicKey
     }
 
-    addSeverabilityAmount() {
-        this.formItems.divisibility = Number(this.formItems.divisibility) + 1
+    addDivisibilityAmount() {
+        this.formItems.divisibility = this.formItems.divisibility >= NETWORK_PARAMS.MAX_MOSAIC_DIVISIBILITY
+            ? Number(this.formItems.divisibility) : Number(this.formItems.divisibility) + 1
     }
 
-    cutSeverabilityAmount() {
+    cutDivisibilityAmount() {
         this.formItems.divisibility = this.formItems.divisibility >= 1 ? Number(this.formItems.divisibility - 1) : Number(this.formItems.divisibility)
     }
 
     addSupplyAmount() {
-        this.formItems.supply = Number(this.formItems.supply + 1)
+        this.formItems.supply = this.formItems.supply >= NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS
+            ? Number(this.formItems.supply) : Number(this.formItems.supply) + 1
     }
 
     cutSupplyAmount() {
@@ -284,10 +287,25 @@ export class MosaicTransactionTs extends Vue {
     }
 
     @Watch('formItems.multisigPublickey')
-    @Watch('formItems.multisigPublickey')
     onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
+    }
+
+    // @TODO: Quickfix before vee-validate
+    @Watch('formItems.supply')
+    onSupplyChange(newVal) {
+        const {MAX_MOSAIC_ATOMIC_UNITS} = NETWORK_PARAMS
+        if (newVal > MAX_MOSAIC_ATOMIC_UNITS) this.formItems.supply = MAX_MOSAIC_ATOMIC_UNITS 
+        if (newVal < 0) this.formItems.supply = 0 
+    }
+
+    // @TODO: Quickfix before vee-validate
+    @Watch('formItems.divisibility')
+    onDivisibilityChange(newVal) {
+        const {MAX_MOSAIC_DIVISIBILITY} = NETWORK_PARAMS
+        if (newVal > MAX_MOSAIC_DIVISIBILITY) this.formItems.divisibility = MAX_MOSAIC_DIVISIBILITY 
+        if (newVal < 0) this.formItems.divisibility = 0 
     }
 
     initData() {

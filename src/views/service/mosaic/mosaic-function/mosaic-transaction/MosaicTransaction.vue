@@ -42,9 +42,9 @@
           <span class="value">
             <input v-model="formItems.divisibility" type="text" :placeholder="$t('mosaic_divisibility')">
             <span class="number_controller">
-              <img @click="addSeverabilityAmount " class="pointer"
+              <img @click="addDivisibilityAmount " class="pointer"
                    src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="cutSeverabilityAmount" class="pointer"
+              <img @click="cutDivisibilityAmount" class="pointer"
                    src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
            </span>
