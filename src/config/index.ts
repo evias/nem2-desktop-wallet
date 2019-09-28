@@ -101,13 +101,12 @@ export const FEE_SPEEDS = {
     NORMAL: 'NORMAL',
     FAST: 'FAST',
 }
-
-export const nodeConfig = {
-    node: 'http://47.108.88.254:3000',
+export const defaultNetworkConfig = {
     currentXem: 'nem.xem',
     currentXEM1: '',
     XEM: 'XEM',
     gas2xemRate: 20000,   //  1xem=20000gas
+    networkConfirmations: 10,
     defaultFees: [
         {speed: FEE_SPEEDS.SLOW, value: 0.5},
         {speed: FEE_SPEEDS.NORMAL, value: 1},
