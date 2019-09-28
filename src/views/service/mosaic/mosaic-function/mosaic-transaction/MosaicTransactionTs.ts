@@ -4,7 +4,6 @@ import {
     MosaicId,
     MosaicNonce,
     PublicAccount,
-    Address,
     MosaicDefinitionTransaction,
     MosaicFlags,
     Deadline,
@@ -19,7 +18,7 @@ import {
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from "@/config/view/form";
-import { mosaicTransactionTypeConfig } from '@/config/view/mosaic'
+import {mosaicTransactionTypeConfig} from '@/config/view/mosaic'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
 
 
@@ -45,8 +44,6 @@ export class MosaicTransactionTs extends Vue {
     showCheckPWDialog = false
     isMultisigAccount = false
     transactionList = []
-    showMosaicEditDialog = false
-    showMosaicAliasDialog = false
     isCompleteForm = true
     multisigPublickeyList = []
     typeList = mosaicTransactionTypeConfig
@@ -164,26 +161,6 @@ export class MosaicTransactionTs extends Vue {
     closeCheckPWDialog() {
         this.showCheckPWDialog = false
     }
-
-    showAliasDialog() {
-        document.body.click()
-        setTimeout(() => {
-            this.showMosaicAliasDialog = true
-        })
-    }
-
-    closeMosaicAliasDialog() {
-        this.showMosaicAliasDialog = false
-    }
-
-    showEditDialog() {
-        this.showMosaicEditDialog = true
-    }
-
-    closeMosaicEditDialog() {
-        this.showMosaicEditDialog = false
-    }
-
 
     checkEnd(isPasswordRight) {
         if (!isPasswordRight) {

@@ -6,7 +6,8 @@ import {
     PublicAccount,
     TransactionHttp,
     CosignatureTransaction,
-    AggregateTransaction
+    AggregateTransaction,
+    Address
 } from "nem2-sdk"
 import {mapState} from "vuex"
 import {StoreAccount} from "@/core/model"
@@ -37,26 +38,21 @@ export class MultisigCosignTs extends Vue {
         return this.activeAccount.node
     }
 
-    async getCosignTransactions() {
-        const {publickey, node} = this
-        const accountHttp = new AccountHttp(node)
+    get address() {
+        return Address.createFromRawAddress(this.activeAccount.wallet.address) 
+    }
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            publickey,
-            NetworkType.MIJIN_TEST,
-        )
-        this.aggregatedTransactionList = await accountHttp.aggregateBondedTransactions(publicAccount).toPromise()
+    async getCosignTransactions() {
+        const {node, address} = this
+        const accountHttp = new AccountHttp(node)
+        this.aggregatedTransactionList = await accountHttp.aggregateBondedTransactions(address).toPromise()
     }
 
     cosignTransaction(index) {
-
-        const {publickey, node, privatekey} = this
+        const {node, privatekey} = this
         const endpoint = node
         const account = Account.createFromPrivateKey(privatekey, NetworkType.MIJIN_TEST)
         const transactionHttp = new TransactionHttp(endpoint)
-        const emitter = (type, value) => {
-            this.$emit(type, value)
-        }
         const cosignatureTransaction = CosignatureTransaction.create(this.aggregatedTransactionList[index])
         const cosignedTx = account.signCosignatureTransaction(cosignatureTransaction)
         transactionHttp.announceAggregateBondedCosignature(cosignedTx).subscribe((x) => {
