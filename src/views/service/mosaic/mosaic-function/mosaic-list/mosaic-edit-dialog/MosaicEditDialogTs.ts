@@ -1,6 +1,6 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {Password} from 'nem2-sdk'
+import {Password, NetworkType} from 'nem2-sdk'
 import {Message, networkConfig} from "@/config/index.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
@@ -20,7 +20,7 @@ export class MosaicEditDialogTs extends Vue {
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
-    formItems: any = formDataConfig.mosaicEditForm
+    formItems = formDataConfig.mosaicEditForm
     XEM = defaultNetworkConfig.XEM
 
     @Prop()
@@ -43,7 +43,7 @@ export class MosaicEditDialogTs extends Vue {
         return this.itemMosaic.mosaicInfo.supply.compact()
     }
 
-    get wallet() {
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
@@ -57,6 +57,14 @@ export class MosaicEditDialogTs extends Vue {
 
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
+    }
+
+    get mosaicId(): string {
+      return this.itemMosaic.hex
+    }
+    
+    get networkType(): NetworkType {
+        return this.wallet.networkType
     }
 
     mosaicEditDialogCancel() {
@@ -126,9 +134,9 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     updateMosaic() {
-        const {node, generationHash, feeAmount} = this
+        const {node, generationHash, feeAmount, mosaicId, networkType} = this
         const password = new Password(this.formItems.password)
-        const {mosaicId, delta, supplyType, networkType} = this.formItems
+        const {delta, supplyType} = this.formItems
         const transaction = new MosaicApiRxjs().mosaicSupplyChange(
             mosaicId,
             delta,
