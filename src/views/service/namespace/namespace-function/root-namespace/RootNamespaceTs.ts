@@ -7,10 +7,10 @@ import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialo
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
 } from '@/core/utils'
-import { formDataConfig } from '@/config/view/form'
+import {formDataConfig} from '@/config/view/form'
 import {rootNamespaceTypeConfig} from "@/config/view/namespace";
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
-
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     components: {
@@ -34,8 +34,7 @@ export class RootNamespaceTs extends Vue {
     transactionList = []
     otherDetails: any = {}
     typeList = rootNamespaceTypeConfig
-    form = formDataConfig.rootNamespaceForm
-
+    formItems = formDataConfig.rootNamespaceForm
 
     get generationHash() {
         return this.activeAccount.generationHash
@@ -57,16 +56,8 @@ export class RootNamespaceTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-
     initForm() {
-        this.form = {
-            multisigPublickey: '',
-            duration: 1000,
-            rootNamespaceName: '',
-            innerFee: .5,
-            aggregateFee: .5,
-            lockFee: 10
-        }
+        this.formItems = formDataConfig.rootNamespaceForm
     }
     
     get multisigAccountInfo(): MultisigAccountInfo {
@@ -93,6 +84,17 @@ export class RootNamespaceTs extends Vue {
             .map(({publicKey}) => ({value: publicKey, label: publicKey}))]
     }
 
+    get defaultFees() {
+      const {defaultFeesWithLock, defaultAggregateFees} = defaultNetworkConfig
+      return this.typeList[0].isSelected ? defaultFeesWithLock : defaultAggregateFees
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
     formatAddress(address) {
         return formatAddress(address)
     }
@@ -114,19 +116,18 @@ export class RootNamespaceTs extends Vue {
     }
 
     createByMultisig() {
-        const that = this
-        let {duration, rootNamespaceName, aggregateFee, innerFee, multisigPublickey} = this.form
+        const {feeAmount} = this
+        let {duration, rootNamespaceName, multisigPublickey} = this.formItems
         const {networkType} = this.wallet
-        const {xemDivisibility} = this
-        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const aggregateFee = feeAmount/3
+        const innerFee = feeAmount/3
         const rootNamespaceTransaction = new NamespaceApiRxjs().createdRootNamespace(
             rootNamespaceName,
             duration,
             networkType,
             innerFee
         )
-        if (that.currentMinApproval > 1) {
+        if (this.currentMinApproval > 1) {
             const aggregateTransaction = createBondedMultisigTransaction(
                 [rootNamespaceTransaction],
                 multisigPublickey,
@@ -157,19 +158,17 @@ export class RootNamespaceTs extends Vue {
 
     createRootNamespace() {
         const {networkType} =  this.wallet
-        let {rootNamespaceName, duration, innerFee} = this.form
-        const {xemDivisibility} = this
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        return new NamespaceApiRxjs().createdRootNamespace(rootNamespaceName, duration, networkType, innerFee)
+        const {rootNamespaceName, duration} = this.formItems
+        const {feeAmount} = this
+        return new NamespaceApiRxjs().createdRootNamespace(rootNamespaceName, duration, networkType, feeAmount)
     }
-
 
     closeCheckPWDialog() {
         this.showCheckPWDialog = false
     }
 
     checkForm(): boolean {
-        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        const {duration, rootNamespaceName, multisigPublickey} = this.formItems
 
         // check multisig
         if (this.typeList[1].isSelected) {
@@ -177,14 +176,6 @@ export class RootNamespaceTs extends Vue {
                 this.$Notice.error({
                     title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
                 })
-                return false
-            }
-            if ((!Number(aggregateFee) && Number(aggregateFee) !== 0) || Number(aggregateFee) < 0) {
-                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-                return false
-            }
-            if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
-                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }
         }
@@ -216,10 +207,6 @@ export class RootNamespaceTs extends Vue {
             return false
         }
 
-        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-            return false
-        }
         //reservedRootNamespaceNames
         const flag = networkConfig.reservedRootNamespaceNames.every((item) => {
             if (item == rootNamespaceName) {
@@ -247,16 +234,18 @@ export class RootNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        const {feeAmount} = this
         const {address} = this.wallet
-        const {duration, rootNamespaceName, lockFee, innerFee} = this.form
+        const {duration, rootNamespaceName} = this.formItems
+        const feeDivider = this.typeList[0].isSelected ? 2 : 3
         this.transactionDetail = {
             "address": address,
             "duration": duration,
             "namespace": rootNamespaceName,
-            "fee": innerFee
+            "fee": feeAmount/feeDivider
         }
         this.otherDetails = {
-            lockFee: lockFee
+            lockFee: feeAmount/feeDivider
         }
         if (this.typeList[0].isSelected) {
             this.createBySelf()
@@ -268,28 +257,28 @@ export class RootNamespaceTs extends Vue {
 
     // @TODO: target blockTime is hardcoded
     changeXEMRentFee() {
-        const duration = Number(this.form.duration)
+        const duration = Number(this.formItems.duration)
         if (Number.isNaN(duration)) {
-            this.form.duration = 0
+            this.formItems.duration = 0
             this.durationIntoDate = 0
             return
         }
         if (duration * 12 >= 60 * 60 * 24 * 365) {
             this.showErrorMessage(this.$t(Message.DURATION_MORE_THAN_1_YEARS_ERROR) + '')
-            this.form.duration = 0
+            this.formItems.duration = 0
         }
         this.durationIntoDate = formatSeconds(duration * 12)
     }
 
-    @Watch('form', {immediate: true, deep: true})
+    @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        const {duration, rootNamespaceName, multisigPublickey} = this.formItems
 
         // isCompleteForm
         if (this.typeList[0].isSelected) {
-            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && innerFee + '' !== ''
+            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== ''
             return
         }
-        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
+        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
     }
 }

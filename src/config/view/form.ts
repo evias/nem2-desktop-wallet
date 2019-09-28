@@ -17,7 +17,7 @@ export const formDataConfig = {
     },
     mosaicAliasForm: {
         aliasName: '',
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicEditForm: {
@@ -27,11 +27,11 @@ export const formDataConfig = {
         supplyType: 1,
         changeDelta: 0,
         duration: '',
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicUnaliasForm: {
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicTransactionForm: {
@@ -42,41 +42,33 @@ export const formDataConfig = {
         supplyMutable: true,
         permanent: false,
         duration: 1000,
-        innerFee: 0.5,
-        aggregateFee: 0.5,
-        lockFee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         multisigPublickey: ''
     },
     multisigConversionForm: {
         publickeyList: [],
         minApproval: 1,
         minRemoval: 1,
-        bondedFee: 1,
-        lockFee: 10,
-        innerFee: 1
+        feeSpeed: FEE_SPEEDS.NORMAL,
     },
     multisigManagementForm: {
         minApprovalDelta: 0,
         minRemovalDelta: 0,
-        bondedFee: 1,
-        lockFee: 10,
-        innerFee: 1,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         cosignerList: [],
         multisigPublickey: ''
     },
     namesapceEditForm: {
         name: '',
         duration: 0,
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     rootNamespaceForm: {
         duration: 1000,
         rootNamespaceName: '',
         multisigPublickey: '',
-        innerFee: 0.5,
-        aggregateFee: 0.5,
-        lockFee: 0.5
+        feeSpeed: FEE_SPEEDS.NORMAL,
     },
     walletImportMnemonicForm: {
         mnemonic: '',

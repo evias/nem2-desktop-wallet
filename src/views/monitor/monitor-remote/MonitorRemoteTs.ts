@@ -53,6 +53,12 @@ export class MonitorRemoteTs extends Vue {
       return defaultNetworkConfig.defaultFees
     }
 
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
     initForm() {
         this.formItems = formDataConfig.remoteForm
     }
@@ -104,22 +110,21 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        const {remotePublickey, feeSpeed, password} = this.formItems
-        const {generationHash, node, networkType, xemDivisibility, isLinked} = this
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        const fee = getAbsoluteMosaicAmount(feeAmount, xemDivisibility)
+        const {remotePublickey, password} = this.formItems
+        const {generationHash, node, networkType, isLinked} = this
+        const {feeAmount} = this
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             remotePublickey,
             isLinked ? LinkAction.Unlink : LinkAction.Link,
             networkType,
-            UInt64.fromUint(fee)
+            UInt64.fromUint(feeAmount)
         )
         new AppWallet(this.getWallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
         this.modalCancel()
     }
 
-    toggleSwitch(status) {
+    toggleSwitch() {
         this.isShowDialog = true
     }
 

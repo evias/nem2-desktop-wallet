@@ -56,8 +56,14 @@ export class TransactionFormTs extends Vue {
     }
 
     get defaultFees() {
-      const {defaultFees, defaultAggregateFees} = defaultNetworkConfig
-      return this.isSelectedAccountMultisig ? defaultAggregateFees : defaultFees
+        const {defaultFees, defaultAggregateFees} = defaultNetworkConfig
+        return this.isSelectedAccountMultisig ? defaultAggregateFees : defaultFees
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
     get isSelectedAccountMultisig(): boolean {
@@ -112,10 +118,6 @@ export class TransactionFormTs extends Vue {
 
     get generationHash() {
         return this.activeAccount.generationHash
-    }
-
-    get currentXem() {
-        return this.activeAccount.currentXEM1
     }
 
     get accountAddress() {
@@ -230,15 +232,13 @@ export class TransactionFormTs extends Vue {
                 if (!valid) return
                 this.showDialog()
             })
-        // if (!this.isCompleteForm) return
     }
 
     showDialog() {
-        const {accountPublicKey, isSelectedAccountMultisig} = this
-        const {address, remark, mosaicTransferList, isEncrypted, feeSpeed} = this.formItems
+        const {accountPublicKey, isSelectedAccountMultisig, feeAmount} = this
+        const {address, remark, mosaicTransferList, isEncrypted} = this.formItems
         const publicKey = isSelectedAccountMultisig ? accountPublicKey : '(self)' + accountPublicKey
-        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        const lockFee = fee / 3
+        const lockFee = feeAmount / 3
 
         this.transactionDetail = {
             "transaction_type": isSelectedAccountMultisig ? 'Multisig_transfer' : 'ordinary_transfer',
@@ -247,7 +247,7 @@ export class TransactionFormTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": fee + 'XEM',
+            "fee": feeAmount + 'XEM',
             "remarks": remark,
             "encryption": isEncrypted,
         }
@@ -265,10 +265,9 @@ export class TransactionFormTs extends Vue {
     }
 
     sendTransaction() {
-        let {address, remark, feeSpeed, mosaicTransferList, isEncrypted} = this.formItems
-        const {xemDivisibility, networkType} = this
-        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        const innerFee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+        let {address, remark, mosaicTransferList, isEncrypted, } = this.formItems
+        const {feeAmount, networkType} = this
+        const innerFee = feeAmount
 
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
@@ -285,11 +284,10 @@ export class TransactionFormTs extends Vue {
         if (this.currentMinApproval == 0) {
             return
         }
-        const {networkType, xemDivisibility} = this
-        let {address, feeSpeed, mosaicTransferList, isEncrypted, remark, multisigPublickey} = this.formItems
-        const fee = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        const innerFee = getAbsoluteMosaicAmount(fee/3, xemDivisibility)
-        const aggregateFee = getAbsoluteMosaicAmount(fee/3, xemDivisibility)
+        const {networkType, feeAmount} = this
+        let {address, mosaicTransferList, isEncrypted, remark, multisigPublickey} = this.formItems
+        const innerFee = feeAmount/3
+        const aggregateFee = feeAmount/3
 
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
@@ -319,8 +317,6 @@ export class TransactionFormTs extends Vue {
         this.transactionList = [aggregateTransaction]
     }
 
-
-
     async checkForm() {
         const {address, mosaicTransferList, multisigPublickey} = this.formItems
 
@@ -349,7 +345,6 @@ export class TransactionFormTs extends Vue {
 
     async getAddressByAlias() {
         const {node} = this
-        const that = this
         let addressAlias = this.formItems.address
         if (addressAlias.indexOf('@') == -1) {
             return
@@ -359,10 +354,10 @@ export class TransactionFormTs extends Vue {
             const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
             if (namespaceInfo.alias.type === AliasType.Address) {
                 //@ts-ignore
-                that.formModel.address = Address.createFromEncoded(namespaceInfo.alias.address).address
+                this.formItems.address = Address.createFromEncoded(namespaceInfo.alias.address).address
             }
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
     }
 
