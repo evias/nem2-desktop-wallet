@@ -170,6 +170,11 @@ export class MenuBarTs extends Vue {
         })
     }
 
+    initNodeList() {
+        const nodeListData = localRead('nodeList')
+        this.nodeList = nodeListData ? JSON.parse(nodeListData) : nodeListConfig
+    }
+
     created() {
         if (isWindows) windowSizeChange()
         this.initNodeList()

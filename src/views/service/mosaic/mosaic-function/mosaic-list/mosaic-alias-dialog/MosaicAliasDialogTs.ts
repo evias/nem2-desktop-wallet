@@ -1,6 +1,6 @@
 import {AliasAction, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {mapState} from "vuex"
-import {Message, formDataConfig,networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config"
+import {Message, networkConfig} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount} from '@/core/utils'

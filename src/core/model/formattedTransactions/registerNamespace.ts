@@ -1,7 +1,7 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, NamespaceRegistrationTransaction} from 'nem2-sdk'
-import {nodeConfig} from '@/config/index.ts';
+import {Address, Transaction} from 'nem2-sdk'
+import {defaultNetworkConfig} from '@/config/index.ts';
 
 export class FormattedRegisterNamespace extends FormattedTransaction {
   dialogDetailMap: any

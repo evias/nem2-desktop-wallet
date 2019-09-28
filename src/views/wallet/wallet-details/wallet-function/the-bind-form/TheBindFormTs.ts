@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
+import {Address, AddressAlias, AliasAction, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
 import {networkConfig} from "@/config/index"
@@ -64,7 +64,7 @@ export class TheBindFormTs extends Vue {
         return this.NamespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
     }
 
-    get aliasActionTypeList() {
+    get AliasActionList() {
         const {currentHeight} = this
         return this.NamespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
     }
@@ -145,7 +145,7 @@ export class TheBindFormTs extends Vue {
     addressAlias(type) {
         const fee = getAbsoluteMosaicAmount(this.formItem.fee, this.xemDivisibility)
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
-            type ? AliasActionType.Link : AliasActionType.Unlink,
+            type ? AliasAction.Link : AliasAction.Unlink,
             new NamespaceId(this.formItem.alias),
             Address.createFromRawAddress(this.formItem.address),
             this.getWallet.networkType,
