@@ -100,7 +100,7 @@
                 <Poptip placement="bottom">
                   <i class="moreFn"></i>
                   <div slot="content" class="updateFn">
-                    <p class="fnItem" @click="showEditDialog(value)" v-if="value.supplyMutable">
+                    <p class="fnItem" @click="showEditDialog(value)" v-if="value.properties.supplyMutable">
                       <i><img src="@/common/img/service/updateMsaioc.png"></i>
                       <span class="">{{$t('modify_supply')}}</span>
                     </p>

@@ -15,6 +15,7 @@ import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from "@/config/view/form";
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount} from "@/core/model"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     components: {
@@ -42,8 +43,7 @@ export class MultisigManagementTs extends Vue {
     showSubpublickeyList = false
     CosignatoryModificationAction = CosignatoryModificationAction
     publickeyList = []
-
-    formItem = formDataConfig.multisigManagementForm
+    formItems = formDataConfig.multisigManagementForm
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1
@@ -73,13 +73,23 @@ export class MultisigManagementTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    get defaultFees() {
+        return defaultNetworkConfig.defaultAggregateFees
+    }
+    
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+  
     addCosigner(flag) {
         const {currentPublickey} = this
         if (!currentPublickey || !currentPublickey.trim()) {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return
         }
-        this.formItem.cosignerList.push({
+        this.formItems.cosignerList.push({
             publickey: currentPublickey,
             type: flag
         })
@@ -87,7 +97,7 @@ export class MultisigManagementTs extends Vue {
     }
 
     removeCosigner(index) {
-        this.formItem.cosignerList.splice(index, 1)
+        this.formItems.cosignerList.splice(index, 1)
     }
 
     closeCheckPWDialog() {
@@ -95,11 +105,10 @@ export class MultisigManagementTs extends Vue {
     }
 
     confirmInput() {
-        const {lockFee} = this.formItem
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         this.otherDetails = {
-            lockFee: lockFee
+            lockFee: this.feeAmount/3
         }
         const {hasAddCosigner} = this
         if (this.currentMinApproval == 0) {
@@ -115,14 +124,15 @@ export class MultisigManagementTs extends Vue {
 
 
     createCompleteModifyTransaction() {
-        let {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
-        const {networkType, xemDivisibility} = this
+        let {multisigPublickey, cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
+        const {networkType, feeAmount} = this
+
         const multisigCosignatoryModificationList = cosignerList
             .map(cosigner => new MultisigCosignatoryModification(
                 cosigner.type,
                 PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
             ))
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        const innerFee = feeAmount / 3
         const modifyMultisigAccountTx = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
@@ -141,10 +151,10 @@ export class MultisigManagementTs extends Vue {
     }
 
     createBondedModifyTransaction() {
-        let {cosignerList, bondedFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
-        const {networkType, publicKey,xemDivisibility} = this
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
+        let {cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
+        const {networkType, publicKey, feeAmount} = this
+        const innerFee = feeAmount / 3
+        const bondedFee = feeAmount / 3
         const multisigCosignatoryModificationList = cosignerList
             .map(cosigner => new MultisigCosignatoryModification(
                 cosigner.type,
@@ -185,7 +195,7 @@ export class MultisigManagementTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {multisigPublickey, cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
         const {currentMinApproval, currentMinRemoval} = this
 
         if ((!Number(minRemovalDelta) && Number(minRemovalDelta) !== 0) || Number(minRemovalDelta) + currentMinRemoval < 1) {
@@ -213,21 +223,6 @@ export class MultisigManagementTs extends Vue {
             return false
         }
 
-        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
-
-        if ((!Number(bondedFee) && Number(bondedFee) !== 0) || Number(bondedFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
-
-        if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
-
         if (cosignerList.length < 1) {
             return true
         }
@@ -245,17 +240,17 @@ export class MultisigManagementTs extends Vue {
         return publickeyFlag
     }
 
-    @Watch('formItem.multisigPublickey')
-    @Watch('formItem.multisigPublickey')
+    @Watch('formItems.multisigPublickey')
+    @Watch('formItems.multisigPublickey')
     onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
 
-    @Watch('formItem', {immediate: true, deep: true})
+    @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {multisigPublickey, cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
         // isCompleteForm
-        this.isCompleteForm = multisigPublickey.length === 64 && cosignerList.length !== 0 && bondedFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && minApprovalDelta + '' !== '' && minRemovalDelta + '' !== ''
+        this.isCompleteForm = multisigPublickey.length === 64 && cosignerList.length !== 0 && minApprovalDelta + '' !== '' && minRemovalDelta + '' !== ''
     }
 }

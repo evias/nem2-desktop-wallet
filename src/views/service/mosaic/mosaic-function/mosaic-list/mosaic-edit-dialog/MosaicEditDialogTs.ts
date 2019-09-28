@@ -5,13 +5,13 @@ import {Message, networkConfig} from "@/config/index.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, AppMosaic} from "@/core/model"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     computed: {
         ...mapState({activeAccount: 'account'})
     }
-
 })
 export class MosaicEditDialogTs extends Vue {
     show = false
@@ -19,20 +19,27 @@ export class MosaicEditDialogTs extends Vue {
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
-    mosaic: any = formDataConfig.mosaicEditForm
+    formItems: any = formDataConfig.mosaicEditForm
+    XEM = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicEditDialog: boolean
 
     @Prop()
-    itemMosaic: any
+    itemMosaic: AppMosaic
 
-    get selectedMosaic() {
-        return this.itemMosaic
+    get defaultFees() {
+      return defaultNetworkConfig.defaultFees
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
     get supply() {
-        return this.mosaic['supply']
+        return this.itemMosaic.mosaicInfo.supply.compact()
     }
 
     get wallet() {
@@ -56,20 +63,21 @@ export class MosaicEditDialogTs extends Vue {
         this.$emit('closeMosaicEditDialog')
     }
 
+    // @TODO: make get newSupply() instead
     changeSupply() {
-        this.mosaic.changeDelta = Math.abs(this.mosaic.changeDelta)
+        this.formItems.delta = Math.abs(this.formItems.delta)
         let supply = 0
-        if (this.mosaic.supplyType === 1) {
-            supply = Number(this.mosaic.changeDelta) + Number(this.supply)
-            if (supply > this.totalSupply * Math.pow(10, this.mosaic['_divisibility'])) {
-                supply = this.totalSupply * Math.pow(10, this.mosaic['_divisibility'])
-                this.mosaic.changeDelta = supply - this.supply
+        if (this.formItems.supplyType === 1) {
+            supply = Number(this.formItems.delta) + Number(this.supply)
+            if (supply > this.totalSupply * Math.pow(10, this.formItems['_divisibility'])) {
+                supply = this.totalSupply * Math.pow(10, this.formItems['_divisibility'])
+                this.formItems.delta = supply - this.supply
             }
         } else {
-            supply = this.supply - this.mosaic.changeDelta
+            supply = this.supply - this.formItems.delta
             if (supply <= 0) {
                 supply = 0
-                this.mosaic.changeDelta = this.supply
+                this.formItems.delta = this.supply
             }
         }
 
@@ -77,35 +85,29 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     checkInfo() {
-        const {mosaic} = this
+        const {formItems} = this
 
-        if (mosaic.fee === 0) {
+        if (formItems.delta === 0) {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
-        if (mosaic.changeDelta === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (mosaic.password === '') {
+        if (formItems.password === '') {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
 
-        if (mosaic.password.length < 8) {
+        if (formItems.password.length < 8) {
             this.$Notice.error({
                 title: '' + Message.WRONG_PASSWORD_ERROR
             })
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(mosaic.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -123,16 +125,15 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     updateMosaic() {
-        const {node, generationHash, xemDivisibility} = this
-        const password = new Password(this.mosaic.password)
-        let {mosaicId, changeDelta, supplyType, networkType, fee} = this.mosaic
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+        const {node, generationHash, feeAmount} = this
+        const password = new Password(this.formItems.password)
+        const {mosaicId, delta, supplyType, networkType} = this.formItems
         const transaction = new MosaicApiRxjs().mosaicSupplyChange(
             mosaicId,
-            changeDelta,
+            delta,
             supplyType,
             networkType,
-            fee
+            feeAmount
         )
         this.show = false
         new AppWallet(this.wallet)
@@ -149,34 +150,25 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.mosaic = {
-            id: '',
-            aliasName: '',
-            delta: 0,
-            supplyType: 1,
-            changeDelta: 0,
-            duration: '',
-            fee: .5,
-            password: ''
-        }
+        this.formItems = formDataConfig.mosaicEditForm
     }
 
     // @TODO: use v-model
     @Watch('showMosaicEditDialog')
     onShowMosaicEditDialogChange() {
         this.show = this.showMosaicEditDialog
-        Object.assign(this.mosaic, this.selectedMosaic)
+        Object.assign(this.formItems, this.itemMosaic)
     }
 
     // @TODO: use v-model
-    @Watch('selectedMosaic')
+    @Watch('itemMosaic')
     onSelectMosaicChange() {
-        Object.assign(this.mosaic, this.selectedMosaic)
+        Object.assign(this.formItems, this.itemMosaic)
     }
 
-    @Watch('mosaic', {immediate: true, deep: true})
+    @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {delta, fee, password} = this.mosaic
-        this.isCompleteForm = parseInt(delta.toString()) >= 0 && fee > 0 && password !== ''
+        const {delta, password} = this.formItems
+        this.isCompleteForm = parseInt(delta.toString()) >= 0 && password !== ''
     }
 }

@@ -6,6 +6,7 @@ import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
 import {AppWallet, StoreAccount} from "@/core/model"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     computed: {
@@ -21,7 +22,8 @@ export class MonitorRemoteTs extends Vue {
     isLinkToRemote = false
     isShowDialog = false
     remotePublickey = ''
-    formItem: any = formDataConfig.remoteForm
+    formItems = formDataConfig.remoteForm
+    XEM = defaultNetworkConfig.XEM
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -47,16 +49,18 @@ export class MonitorRemoteTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    initForm() {
-        this.formItem = {
-            remotePublickey: '',
-            fee: 0.5,
-            password: ''
-        }
+    get defaultFees() {
+      return defaultNetworkConfig.defaultFees
     }
 
-    changePage() {
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
 
+    initForm() {
+        this.formItems = formDataConfig.remoteForm
     }
 
     modalCancel() {
@@ -77,20 +81,15 @@ export class MonitorRemoteTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {remotePublickey, fee, password} = this.formItem
+        const {remotePublickey, password} = this.formItems
         if (remotePublickey.length !== 64) {
             this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
-            return false
-        }
-        if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
             return false
         }
         if (!password || password.trim() == '') {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
-
         if (password.length < 8) {
             this.showErrorMessage(this.$t('password_error') + '')
             return false
@@ -111,22 +110,21 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        let {remotePublickey, fee, password} = this.formItem
-        const {generationHash, node, networkType, xemDivisibility, isLinked} = this
-        console.log(fee, xemDivisibility)
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+        const {remotePublickey, password} = this.formItems
+        const {generationHash, node, networkType, isLinked} = this
+        const {feeAmount} = this
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             remotePublickey,
             isLinked ? LinkAction.Unlink : LinkAction.Link,
             networkType,
-            UInt64.fromUint(fee)
+            UInt64.fromUint(feeAmount)
         )
         new AppWallet(this.getWallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
         this.modalCancel()
     }
 
-    toggleSwitch(status) {
+    toggleSwitch() {
         this.isShowDialog = true
     }
 
@@ -145,7 +143,7 @@ export class MonitorRemoteTs extends Vue {
                 that.remotePublickey = ''
                 if (Number(that.remotePublickey) != 0) {
                     // switch on
-                    that.formItem.remotePublickey = that.remotePublickey
+                    that.formItems.remotePublickey = that.remotePublickey
                     that.isLinked = true
                     return
                 }
