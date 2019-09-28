@@ -17,7 +17,7 @@ import {
     sortByAlias
 } from '@/core/services/mosaics/methods.ts'
 import {networkConfig} from "@/config"
-import {MosaicNamespaceStatusType} from "@/core/model"
+import {MosaicNamespaceStatusType, StoreAccount, AppInfo} from "@/core/model"
 
 @Component({
     components: {
@@ -28,8 +28,8 @@ import {MosaicNamespaceStatusType} from "@/core/model"
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
 export class MosaicListTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     isLoadingConfirmedTx = false
     currentTab: number = 0
     currentPage: number = 1

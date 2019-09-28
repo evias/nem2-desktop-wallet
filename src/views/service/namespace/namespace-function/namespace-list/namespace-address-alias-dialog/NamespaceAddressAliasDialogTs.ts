@@ -4,8 +4,8 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {AppWallet} from "@/core/model"
-import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
+import {AppWallet, StoreAccount, AppInfo} from "@/core/model"
+import {getAbsoluteMosaicAmount} from "@/core/utils"
 
 @Component({
     computed: {
@@ -16,8 +16,8 @@ import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
     }
 })
 export class NamespaceAddressAliasDialogTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     isShowDialog = false
     isCompleteForm = true
     aliasListIndex = -1

@@ -4,7 +4,7 @@ import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount} from "@/core/utils/mosaics"
 import {AppLock} from "@/core/utils/appLock"
-import {AppAccounts, AppWallet} from "@/core/model"
+import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
@@ -12,7 +12,7 @@ import {AppAccounts, AppWallet} from "@/core/model"
 export class CheckPasswordDialogTs extends Vue {
     stepIndex = 0
     show = false
-    activeAccount: any
+    activeAccount: StoreAccount
     walletInputInfo = {
         password: ''
     }
@@ -65,7 +65,7 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
     get mnemonicCipher() {
-        return this.activeAccount.mnemonic
+        return this.activeAccount.wallet.mnemonic
     }
 
     get accountName() {

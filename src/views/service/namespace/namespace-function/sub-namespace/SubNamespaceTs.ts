@@ -7,7 +7,8 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, formatAddress} from '@/core/utils'
 import {subNamespaceTypeConfig} from "@/config/view/namespace";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppNamespace} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppNamespace, StoreAccount, AppInfo} from "@/core/model"
+
 @Component({
     components: {
         CheckPWDialog
@@ -20,8 +21,8 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppN
     }
 })
 export class SubNamespaceTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     durationIntoDate = 0
     isCompleteForm = true
     showCheckPWDialog = false

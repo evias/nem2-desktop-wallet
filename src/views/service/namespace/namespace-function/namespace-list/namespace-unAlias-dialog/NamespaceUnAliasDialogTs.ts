@@ -5,14 +5,14 @@ import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},
     }
 )
 export class NamespaceUnAliasDialogTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     show = false
     isCompleteForm = false
     aliasNameList: any[] = []

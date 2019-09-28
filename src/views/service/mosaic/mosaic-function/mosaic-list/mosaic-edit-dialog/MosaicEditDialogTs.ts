@@ -7,6 +7,7 @@ import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
 import {AppWallet, AppMosaic} from "@/core/model"
 import {defaultNetworkConfig} from '@/config'
+import {StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -14,8 +15,8 @@ import {defaultNetworkConfig} from '@/config'
     }
 })
 export class MosaicEditDialogTs extends Vue {
+    activeAccount: StoreAccount
     show = false
-    activeAccount: any
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits

@@ -7,7 +7,7 @@ import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
 import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType";
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount, AppInfo} from "@/core/model"
 
 @Component({
     computed: {
@@ -18,8 +18,8 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class NamespaceMosaicAliasDialogTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     show = false
     isCompleteForm = false
     formItem: any = formDataConfig.mosaicAliasForm

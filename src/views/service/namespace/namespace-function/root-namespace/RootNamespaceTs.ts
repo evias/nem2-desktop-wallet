@@ -9,7 +9,7 @@ import {
 } from '@/core/utils'
 import {formDataConfig} from '@/config/view/form'
 import {rootNamespaceTypeConfig} from "@/config/view/namespace";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo} from "@/core/model"
 import {defaultNetworkConfig} from '@/config'
 
 @Component({
@@ -24,8 +24,8 @@ import {defaultNetworkConfig} from '@/config'
     }
 })
 export class RootNamespaceTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     transactionDetail = {}
     isCompleteForm = false
     currentMinApproval = -1

@@ -1,20 +1,20 @@
+import {Address, MosaicId, AliasType} from "nem2-sdk"
+import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Watch, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-import {mapState} from "vuex"
 import {networkConfig} from '@/config/index.ts'
-import {Address, MosaicId, AliasType} from "nem2-sdk"
+import {AppMosaics} from '@/core/services/mosaics'
+import {sortByBindType, sortByduration, sortByName, sortByOwnerShip} from "@/core/services/namespace"
+import {namespaceSortType} from "@/config/view/namespace"
+import {StoreAccount, AppInfo, MosaicNamespaceStatusType} from "@/core/model"
+
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
 import NamespaceMosaicAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-mosaic-alias-dialog/NamespaceMosaicAliasDialog.vue'
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
-import {AppMosaics} from '@/core/services/mosaics'
-import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType"
-import {sortByBindType, sortByduration, sortByName, sortByOwnerShip} from "@/core/services/namespace"
-import {namespaceSortType} from "@/config/view/namespace"
-
 @Component({
     components: {
         NamespaceEditDialog,
@@ -32,8 +32,8 @@ import {namespaceSortType} from "@/config/view/namespace"
 })
 
 export class NamespaceListTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     currentNamespace = ''
     pageSize: number = networkConfig.namespaceListSize
     page: number = 1

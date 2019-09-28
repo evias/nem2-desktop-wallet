@@ -117,11 +117,12 @@ export const defaultNetworkConfig = {
         {speed: FEE_SPEEDS.SLOW, value: 1.5},
         {speed: FEE_SPEEDS.NORMAL, value: 3},
         {speed: FEE_SPEEDS.FAST, value: 6},
-    ]
+    ],
+    networkConfirmations: 10,
 }
 
 export const networkConfig = {
-    currentGenerateTime: 12,
+    targetBlockTime: 12,
     publicKey: "",
     generationHash: "",
     enableVerifiableState: true,

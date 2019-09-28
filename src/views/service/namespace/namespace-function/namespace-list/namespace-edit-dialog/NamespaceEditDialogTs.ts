@@ -5,7 +5,7 @@ import {Password} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"
 import {defaultNetworkConfig} from '@/config'
 
@@ -17,7 +17,7 @@ import {defaultNetworkConfig} from '@/config'
     }
 })
 export class NamespaceEditDialogTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     show = false
     isCompleteForm = false
     stepIndex = 0

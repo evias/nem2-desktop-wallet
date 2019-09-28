@@ -6,8 +6,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
-
+import {StoreAccount, AppInfo, AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -18,8 +17,8 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class MosaicAliasDialogTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     show = false
     isCompleteForm = false
     mosaic: any = formDataConfig.mosaicAliasForm

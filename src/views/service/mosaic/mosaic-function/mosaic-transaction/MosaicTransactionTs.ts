@@ -19,9 +19,8 @@ import {
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from "@/config/view/form";
-import { mosaicTransactionTypeConfig } from '@/config/view/mosaic'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
-
+import {mosaicTransactionTypeConfig} from '@/config/view/mosaic'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -34,7 +33,7 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
     }
 })
 export class MosaicTransactionTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     duration = 0
     otherDetails: any = {}
     durationIntoDate: any = 0
