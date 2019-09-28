@@ -76,19 +76,19 @@
         </div>
 
         <div class="form_item">
-        <span class="key">{{$t('fee')}}</span>
-            <Select
-                    class="fee-select"
-                    data-vv-name="mosaic"
-                    v-model="formItems.feeSpeed"
-                    v-validate="'required'"
-                    :data-vv-as="$t('fee')"
-                    :placeholder="$t('fee')"
-            >
-              <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
-                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
-              </Option>
-            </Select>
+          <span class="key">{{$t('fee')}}</span>
+          <Select
+                  class="fee-select"
+                  data-vv-name="fee"
+                  v-model="formItems.feeSpeed"
+                  v-validate="'required'"
+                  :data-vv-as="$t('fee')"
+                  :placeholder="$t('fee')"
+          >
+            <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+              {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+            </Option>
+          </Select>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>

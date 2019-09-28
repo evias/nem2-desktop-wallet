@@ -41,10 +41,6 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get namespaceList() {
-        return this.activeAccount.namespaces
-    }
-
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
     }

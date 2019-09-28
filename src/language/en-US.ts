@@ -299,7 +299,7 @@ export const en_US = {
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
     space_list: 'Space list',
-    namespace_name: 'Space name',
+    namespace_name: 'Namespace name',
     update_namespace: 'Update namespace',
     namespace_operation: 'Namespace operation',
 

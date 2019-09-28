@@ -164,13 +164,13 @@ export class MosaicTransactionTs extends Vue {
 
     showCheckDialog() {
         const {supply, divisibility, transferable, permanent, supplyMutable, restrictable, duration} = this.formItems
-        const {address, feeAmount} = this
+        const {address, feeAmount, xemDivisibility} = this
         this.transactionDetail = {
             "address": address,
             "supply": supply,
             "mosaic_divisibility": divisibility,
             "duration": duration,
-            "fee": feeAmount,
+            "fee": feeAmount / Math.pow(10,xemDivisibility),
             'transmittable': transferable,
             'variable_supply': supplyMutable,
             "duration_permanent": permanent,

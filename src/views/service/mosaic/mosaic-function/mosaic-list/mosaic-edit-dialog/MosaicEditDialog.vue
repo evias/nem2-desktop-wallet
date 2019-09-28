@@ -34,7 +34,7 @@
                      :disabled="!itemMosaic.properties.supplyMutable"
                      :placeholder="$t('please_enter_the_amount_of_change')"
                      @input="changeSupply"
-              ></Input>
+              />
             </FormItem>
             <FormItem :label="$t('post_change_supply')">
               <p class="mosaicTxt">{{changedSupply}}</p>
@@ -48,7 +48,7 @@
             </FormItem>
             <FormItem :label="$t('password')">
               <Input v-model="formItems.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+                     :placeholder="$t('please_enter_your_wallet_password')" />
             </FormItem>
             <FormItem class="button_update">
               <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">

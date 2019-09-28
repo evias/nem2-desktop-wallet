@@ -13,7 +13,6 @@ import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 })
 export class MosaicEditDialogTs extends Vue {
     activeAccount: StoreAccount
-    show = false
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
@@ -25,7 +24,16 @@ export class MosaicEditDialogTs extends Vue {
 
     @Prop()
     itemMosaic: AppMosaic
+  
+    get show() {
+        return this.showMosaicEditDialog
+    }
 
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
     get defaultFees(): DefaultFee[] {
         return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
@@ -157,19 +165,6 @@ export class MosaicEditDialogTs extends Vue {
 
     initForm() {
         this.formItems = formDataConfig.mosaicEditForm
-    }
-
-    // @TODO: use v-model
-    @Watch('showMosaicEditDialog')
-    onShowMosaicEditDialogChange() {
-        this.show = this.showMosaicEditDialog
-        Object.assign(this.formItems, this.itemMosaic)
-    }
-
-    // @TODO: use v-model
-    @Watch('itemMosaic')
-    onSelectMosaicChange() {
-        Object.assign(this.formItems, this.itemMosaic)
     }
 
     @Watch('formItems', {immediate: true, deep: true})

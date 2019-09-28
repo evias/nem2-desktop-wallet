@@ -121,11 +121,9 @@ export class MosaicListTs extends Vue {
     }
 
     showAliasDialog(item) {
-        document.body.click()
+        console.log(item, 'call')
         this.selectedMosaic = item
-        setTimeout(() => {
-            this.showMosaicAliasDialog = true
-        })
+        this.showMosaicAliasDialog = true
     }
 
     showUnAliasDialog(item) {
