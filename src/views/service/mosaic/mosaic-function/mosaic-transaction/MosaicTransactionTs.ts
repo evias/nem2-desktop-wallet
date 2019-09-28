@@ -37,11 +37,9 @@ export class MosaicTransactionTs extends Vue {
     activeAccount: StoreAccount
     duration = 0
     otherDetails: any = {}
-    durationIntoDate: any = 0
     currentMinApproval = -1
     transactionDetail = {}
     showCheckPWDialog = false
-    isMultisigAccount = false
     transactionList = []
     isCompleteForm = true
     formItems = formDataConfig.mosaicTransactionForm
@@ -53,7 +51,14 @@ export class MosaicTransactionTs extends Vue {
     }
 
     get activeMultisigAccount(): string {
-        return this.activeMultisigAccount
+        return this.activeAccount.activeMultisigAccount
+    }
+
+    get announceInLock(): boolean {
+        const {activeMultisigAccount, networkType} = this
+        if (!this.activeMultisigAccount) return false
+        const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
+        return this.activeAccount.multisigAccountInfo[address].minApproval > 1
     }
 
     get multisigInfo(): MultisigAccountInfo {
@@ -102,7 +107,9 @@ export class MosaicTransactionTs extends Vue {
     }
 
     get defaultFees(): DefaultFee[] {
-        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+        if (!this.activeMultisigAccount) return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+        if (!this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.DOUBLE]
+        if (this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
     }
 
     get feeAmount(): number {
@@ -111,9 +118,30 @@ export class MosaicTransactionTs extends Vue {
         return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
+    get feeDivider(): number {
+        if (!this.activeMultisigAccount) return 1
+        if (!this.announceInLock) return 2
+        if (this.announceInLock) return 3
+    }
+
     initForm(): void {
         this.formItems = formDataConfig.mosaicTransactionForm
         this.formItems.multisigPublickey = this.accountPublicKey
+    }
+
+    get durationIntoDate(): string {
+        const duration = Number(this.formItems.duration)
+        if (Number.isNaN(duration)) {
+            this.formItems.duration = 0
+            return ''
+        }
+        if (duration * 12 >= 60 * 60 * 24 * 3650) {
+            this.$Notice.error({
+                title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
+            })
+            this.formItems.duration = 0
+        }
+        return formatSeconds(duration * 12)
     }
 
     addDivisibilityAmount() {
@@ -148,10 +176,14 @@ export class MosaicTransactionTs extends Vue {
             "duration_permanent": permanent,
             "restrictable": restrictable
         }
-        this.otherDetails = {
-            lockFee: feeAmount / 3
+
+        if (this.announceInLock) {
+            this.otherDetails = {
+                lockFee: feeAmount / 3
+            }
         }
-        if (this.isMultisigAccount) {
+
+        if (this.activeMultisigAccount) {
             this.createByMultisig()
             this.showCheckPWDialog = true
             return
@@ -180,7 +212,7 @@ export class MosaicTransactionTs extends Vue {
         const nonce = MosaicNonce.createRandom()
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, networkType)
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.wallet.networkType))
-        const innerFee = feeAmount / 3
+        const fee = feeAmount
         this.transactionList = [
             new MosaicApiRxjs().createMosaic(
                 nonce,
@@ -193,17 +225,16 @@ export class MosaicTransactionTs extends Vue {
                 supply,
                 publicAccount,
                 restrictable,
-                Number(innerFee))
+                Number(fee))
         ]
         that.initForm()
     }
 
-
     createByMultisig() {
         const {networkType, feeAmount} = this
         const {supply, divisibility, transferable, supplyMutable, duration, multisigPublickey} = this.formItems
-        const innerFee = feeAmount / 3
-        const aggregateFee = feeAmount / 3
+        const innerFee = feeAmount / this.feeDivider
+        const aggregateFee = feeAmount / this.feeDivider
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.wallet.networkType))
         const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
@@ -249,15 +280,6 @@ export class MosaicTransactionTs extends Vue {
 
     checkForm() {
         const {supply, divisibility, duration, multisigPublickey} = this.formItems
-        // multisigApi check
-        if (this.isMultisigAccount) {
-            if (!multisigPublickey) {
-                this.$Notice.error({
-                    title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
-                })
-                return false
-            }
-        }
         // common check
         if (!Number(supply) || supply < 0) {
             this.$Notice.error({
@@ -306,26 +328,6 @@ export class MosaicTransactionTs extends Vue {
         const {MAX_MOSAIC_DIVISIBILITY} = NETWORK_PARAMS
         if (newVal > MAX_MOSAIC_DIVISIBILITY) this.formItems.divisibility = MAX_MOSAIC_DIVISIBILITY 
         if (newVal < 0) this.formItems.divisibility = 0 
-    }
-
-    initData() {
-        this.durationChange()
-    }
-
-    durationChange() {
-        const duration = Number(this.formItems.duration)
-        if (Number.isNaN(duration)) {
-            this.formItems.duration = 0
-            this.durationIntoDate = 0
-            return
-        }
-        if (duration * 12 >= 60 * 60 * 24 * 3650) {
-            this.$Notice.error({
-                title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
-            })
-            this.formItems.duration = 0
-        }
-        this.durationIntoDate = formatSeconds(duration * 12)
     }
 
     mounted() {

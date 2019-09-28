@@ -62,7 +62,7 @@
         <div class="form_item duration_item" v-if="!formItems.permanent">
           <span class="key">{{$t('duration')}}</span>
           <span class="value">
-             <input v-model="formItems.duration" @input="durationChange" type="text" :placeholder="$t('duration')">
+             <input v-model="formItems.duration" type="text" :placeholder="$t('duration')">
             <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
          </span>
           <div class="tips">
@@ -107,7 +107,7 @@
             :transactionDetail="transactionDetail"
             :transactionList=transactionList
             :otherDetails="otherDetails"
-    ></CheckPWDialog>
+    />
   </div>
 </template>
 
