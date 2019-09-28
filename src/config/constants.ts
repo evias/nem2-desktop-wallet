@@ -1,4 +1,5 @@
 import {TransactionType} from 'nem2-sdk'
+import { DefaultFee } from '@/core/model'
 
 export const isWindows = require('./packge.ts').isWin32
 
@@ -92,10 +93,35 @@ export const Message = {
     HD_WALLET_PATH_ERROR: 'hd_wallet_path_error',
     NODE_EXISTS_ERROR:'node_exists_error'
 }
-export const FEE_SPEEDS = {
+
+export const FEE_SPEEDS: Record<string, string> = {
     SLOW: 'SLOW',
     NORMAL: 'NORMAL',
     FAST: 'FAST',
+}
+
+export const FEE_GROUPS: Record<string, string> = {
+    SINGLE: 'SINGLE',
+    DOUBLE: 'DOUBLE',
+    TRIPLE: 'TRIPLE',
+}
+
+export const DEFAULT_FEES: Record <string, DefaultFee[]> = {
+    [FEE_GROUPS.SINGLE]: [
+        {speed: FEE_SPEEDS.SLOW, value: 0.5},
+        {speed: FEE_SPEEDS.NORMAL, value: 1},
+        {speed: FEE_SPEEDS.FAST, value: 2},
+    ],
+    [FEE_GROUPS.DOUBLE]: [
+        {speed: FEE_SPEEDS.SLOW, value: 1},
+        {speed: FEE_SPEEDS.NORMAL, value: 2},
+        {speed: FEE_SPEEDS.FAST, value: 3},
+    ],
+    [FEE_GROUPS.TRIPLE]: [
+        {speed: FEE_SPEEDS.SLOW, value: 1.5},
+        {speed: FEE_SPEEDS.NORMAL, value: 3},
+        {speed: FEE_SPEEDS.FAST, value: 6},
+    ],
 }
 
 export const defaultNetworkConfig = {
@@ -103,21 +129,6 @@ export const defaultNetworkConfig = {
     currentXEM1: '',
     XEM: 'XEM',
     gas2xemRate: 20000,   //  1xem=20000gas
-    defaultFees: [
-        {speed: FEE_SPEEDS.SLOW, value: 0.5},
-        {speed: FEE_SPEEDS.NORMAL, value: 1},
-        {speed: FEE_SPEEDS.FAST, value: 2},
-    ],
-    defaultFeesWithLock: [
-        {speed: FEE_SPEEDS.SLOW, value: 1},
-        {speed: FEE_SPEEDS.NORMAL, value: 2},
-        {speed: FEE_SPEEDS.FAST, value: 3},
-    ],
-    defaultAggregateFees: [
-        {speed: FEE_SPEEDS.SLOW, value: 1.5},
-        {speed: FEE_SPEEDS.NORMAL, value: 3},
-        {speed: FEE_SPEEDS.FAST, value: 6},
-    ],
     networkConfirmations: 10,
 }
 

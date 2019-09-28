@@ -9,15 +9,18 @@ import {
     Deadline,
     UInt64,
     MosaicSupplyChangeTransaction,
-    MosaicSupplyType
+    MosaicSupplyType,
+    MultisigAccountInfo,
+    Address,
+    NetworkType
 } from 'nem2-sdk'
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {mosaicTransactionTypeConfig, defaultNetworkConfig, formDataConfig, Message} from '@/config'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount} from "@/core/model"
+import {defaultNetworkConfig, formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppWallet, DefaultFee} from "@/core/model"
 
 @Component({
     components: {
@@ -40,51 +43,76 @@ export class MosaicTransactionTs extends Vue {
     isMultisigAccount = false
     transactionList = []
     isCompleteForm = true
-    multisigPublickeyList = []
-    typeList = mosaicTransactionTypeConfig
     formItems = formDataConfig.mosaicTransactionForm
     XEM: string = defaultNetworkConfig.XEM
+    formatAddress = formatAddress
 
-    get wallet() {
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
-    get networkType() {
+    get activeMultisigAccount(): string {
+        return this.activeMultisigAccount
+    }
+
+    get multisigInfo(): MultisigAccountInfo {
+        const {address} = this.wallet
+        return this.activeAccount.multisigAccountInfo[address]
+    }
+
+    get hasMultisigAccounts(): boolean {
+        if (!this.multisigInfo) return false
+        return this.multisigInfo.multisigAccounts.length > 0
+    }
+
+    get multisigPublickeyList(): {publicKey: string, address: string}[] {
+        if (!this.hasMultisigAccounts) return null
+        return [
+          {
+            publicKey: this.accountPublicKey,
+            address: `(self) ${formatAddress(this.address)}`,
+          },
+          ...this.multisigInfo.multisigAccounts
+            .map(({publicKey}) => ({
+                publicKey,
+                address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+            })),
+        ]
+    }
+
+    get networkType(): NetworkType {
         return this.activeAccount.wallet.networkType
     }
 
-    get accountPublicKey() {
+    get accountPublicKey(): string {
         return this.activeAccount.wallet.publicKey
     }
 
-    get address() {
+    get address(): string {
         return this.activeAccount.wallet.address
     }
 
-    get xemDivisibility() {
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
     }
 
-    get node() {
+    get node(): string {
         return this.activeAccount.node
     }
 
-    get defaultFees() {
-      return defaultNetworkConfig.defaultFees
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
 
-    get feeAmount() {
+    get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
-    initForm() {
+    initForm(): void {
         this.formItems = formDataConfig.mosaicTransactionForm
-    }
-
-    formatAddress(address) {
-        return formatAddress(address)
+        this.formItems.multisigPublickey = this.accountPublicKey
     }
 
     addSeverabilityAmount() {
@@ -103,20 +131,9 @@ export class MosaicTransactionTs extends Vue {
         this.formItems.supply = this.formItems.supply >= 2 ? Number(this.formItems.supply - 1) : Number(this.formItems.supply)
     }
 
-    switchType(index) {
-        this.initForm()
-        let list = this.typeList
-        list = list.map((item) => {
-            item.isSelected = false
-            return item
-        })
-        list[index].isSelected = true
-        this.typeList = list
-    }
-
     showCheckDialog() {
         const {supply, divisibility, transferable, permanent, supplyMutable, restrictable, duration} = this.formItems
-        const {address, feeAmount} = this.wallet
+        const {address, feeAmount} = this
         this.transactionDetail = {
             "address": address,
             "supply": supply,
@@ -260,9 +277,8 @@ export class MosaicTransactionTs extends Vue {
         return true
     }
 
-    createMosaic(isMultisigAccount) {
+    submit() {
         if (!this.isCompleteForm) return
-        this.isMultisigAccount = isMultisigAccount
         if (!this.checkForm()) return
         this.showCheckDialog()
     }
@@ -292,5 +308,9 @@ export class MosaicTransactionTs extends Vue {
             this.formItems.duration = 0
         }
         this.durationIntoDate = formatSeconds(duration * 12)
+    }
+
+    mounted() {
+        this.formItems.multisigPublickey = this.accountPublicKey
     }
 }

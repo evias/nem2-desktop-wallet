@@ -6,12 +6,10 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import { formDataConfig } from '@/config/view/form'
-import {createBondedMultisigTransaction, StoreAccount} from "@/core/model"
+import {createBondedMultisigTransaction, StoreAccount, DefaultFee} from "@/core/model"
 import {getAbsoluteMosaicAmount} from "@/core/utils"
-import {defaultNetworkConfig} from '@/config'
 
 @Component({
     components: {
@@ -65,8 +63,8 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get defaultFees() {
-        return defaultNetworkConfig.defaultAggregateFees
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
     
     get feeAmount() {

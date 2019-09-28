@@ -1,13 +1,10 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password, NetworkType} from 'nem2-sdk'
-import {Message, networkConfig} from "@/config/index.ts"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config/index.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet, AppMosaic} from "@/core/model"
-import {defaultNetworkConfig} from '@/config'
-import {StoreAccount} from "@/core/model"
+import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -29,8 +26,8 @@ export class MosaicEditDialogTs extends Vue {
     @Prop()
     itemMosaic: AppMosaic
 
-    get defaultFees() {
-      return defaultNetworkConfig.defaultFees
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
 
     get feeAmount() {

@@ -2,12 +2,10 @@ import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
-import {Message} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet, StoreAccount} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"
-import {defaultNetworkConfig} from '@/config'
 
 @Component({
     computed: {
@@ -51,8 +49,8 @@ export class NamespaceEditDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get defaultFees() {
-        return defaultNetworkConfig.defaultFees
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
 
     get feeAmount() {

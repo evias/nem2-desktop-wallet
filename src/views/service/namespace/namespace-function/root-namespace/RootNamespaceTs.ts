@@ -2,15 +2,12 @@ import {mapState} from "vuex"
 import {PublicAccount, MultisigAccountInfo} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig} from "@/config/index.ts"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig, rootNamespaceTypeConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
 } from '@/core/utils'
-import {formDataConfig} from '@/config/view/form'
-import {rootNamespaceTypeConfig} from "@/config/view/namespace";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo} from "@/core/model"
-import {defaultNetworkConfig} from '@/config'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo, DefaultFee} from "@/core/model"
 
 @Component({
     components: {
@@ -84,9 +81,8 @@ export class RootNamespaceTs extends Vue {
             .map(({publicKey}) => ({value: publicKey, label: publicKey}))]
     }
 
-    get defaultFees() {
-      const {defaultFeesWithLock, defaultAggregateFees} = defaultNetworkConfig
-      return this.typeList[0].isSelected ? defaultFeesWithLock : defaultAggregateFees
+    get defaultFees(): DefaultFee[] {
+        return this.typeList[0].isSelected ? DEFAULT_FEES[FEE_GROUPS.TRIPLE] : DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
 
     get feeAmount() {

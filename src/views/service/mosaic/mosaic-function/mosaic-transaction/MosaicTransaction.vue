@@ -1,18 +1,24 @@
 <template>
   <div class="mosaic_transaction_container radius secondary_page_animate">
-    <div class="left_switch_type">
-      <div class="type_list_item " v-for="(b,index) in typeList">
-        <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchType(index)">{{$t(b.name)}}</span>
-      </div>
-    </div>
-
     <div class="right_panel">
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected && wallet">{{formatAddress(wallet.address)}}</span>
-          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="formItems.multisigPublickey" class="fee-select">
-            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
+          <span
+            v-if="!hasMultisigAccounts"
+            class="value"
+          >{{ formatAddress(wallet.address) }}
+          </span>
+          <Select
+            v-if="hasMultisigAccounts"
+            :placeholder="$t('publickey')"
+            v-model="formItems.multisigPublickey"
+            class="fee-select"
+          >
+            <Option
+              v-for="item in multisigPublickeyList"
+              :value="item.publicKey" :key="item.publicKey"
+            >{{ item.address }}
             </Option>
           </Select>
         </div>
@@ -69,7 +75,7 @@
           <span class="value">{{Number(formItems.duration)}}XEM</span>
         </div>
 
-        <div class="form_item" v-if="typeList[0].isSelected">
+        <div class="form_item">
         <span class="key">{{$t('fee')}}</span>
             <Select
                     class="fee-select"
@@ -87,42 +93,9 @@
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
-        <div v-else>
-          <div class="form_item">
-            <span class="key">{{$t('inner_fee')}}</span>
-            <span class="value">
-              <input type="text" v-model="formItems.innerFee" :placeholder="$t('inner_fee')">
-              <!--            <span class="end_label">gas</span>-->
-          </span>
-            <div class="tips">
-              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-            </div>
-          </div>
-
-          <div class="form_item">
-            <span class="key">{{$t('bonded_fee')}}</span>
-            <span class="value">
-              <input type="text" v-model="formItems.aggregateFee" :placeholder="$t('bonded_fee')">
-              <!--            <span class="end_label">gas</span>-->
-          </span>
-            <div class="tips">
-              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-            </div>
-          </div>
-          <div class="form_item">
-            <span class="key">{{$t('lock_fee')}}</span>
-            <span class="value">
-              <input type="text" v-model="formItems.lockFee" :placeholder="$t('lock_fee')">
-              <!--            <span class="end_label">gas</span>-->
-          </span>
-            <div class="tips">
-              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-            </div>
-          </div>
-        </div>
 
         <div :class="['create_button' ,isCompleteForm?'pointer':'not_allowed']"
-             @click="createMosaic(typeList[1].isSelected)">
+             @click="submit()">
           {{$t('create')}}
         </div>
       </div>

@@ -63,3 +63,8 @@ export interface AppInfo {
     namespaceLoading: boolean
     multisigLoading: boolean
 }
+
+export interface DefaultFee {
+    speed: string,
+    value: number,
+}

@@ -1,6 +1,6 @@
 import {Mosaic, MosaicId, UInt64, Address, NamespaceId, AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message} from "@/config"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
@@ -9,9 +9,7 @@ import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount} from "@/core/model"
-import {formDataConfig} from '@/config/view/form'
-import {defaultNetworkConfig} from '@/config/index'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee} from "@/core/model"
 
 @Component({
     components: {
@@ -55,9 +53,8 @@ export class TransactionFormTs extends Vue {
         return addressAliasMap
     }
 
-    get defaultFees() {
-        const {defaultFees, defaultAggregateFees} = defaultNetworkConfig
-        return this.isSelectedAccountMultisig ? defaultAggregateFees : defaultFees
+    get defaultFees(): DefaultFee[] {
+        return this.isSelectedAccountMultisig ? DEFAULT_FEES[FEE_GROUPS.SINGLE] : DEFAULT_FEES[FEE_GROUPS.DOUBLE]
     }
 
     get feeAmount() {

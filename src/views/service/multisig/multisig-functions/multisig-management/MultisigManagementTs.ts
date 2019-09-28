@@ -11,11 +11,9 @@ import {
 import {
     getAbsoluteMosaicAmount,
 } from "@/core/utils"
-import {Message} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {formDataConfig} from "@/config/view/form";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount} from "@/core/model"
-import {defaultNetworkConfig} from '@/config'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, DefaultFee} from "@/core/model"
 
 @Component({
     components: {
@@ -73,8 +71,8 @@ export class MultisigManagementTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get defaultFees() {
-        return defaultNetworkConfig.defaultAggregateFees
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
     
     get feeAmount() {
