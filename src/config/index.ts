@@ -111,6 +111,11 @@ export const nodeConfig = {
         {speed: FEE_SPEEDS.NORMAL, value: 1},
         {speed: FEE_SPEEDS.FAST, value: 2},
     ],
+    defaultFeesWithLock: [
+        {speed: FEE_SPEEDS.SLOW, value: 1},
+        {speed: FEE_SPEEDS.NORMAL, value: 2},
+        {speed: FEE_SPEEDS.FAST, value: 3},
+    ],
     defaultAggregateFees: [
         {speed: FEE_SPEEDS.SLOW, value: 1.5},
         {speed: FEE_SPEEDS.NORMAL, value: 3},

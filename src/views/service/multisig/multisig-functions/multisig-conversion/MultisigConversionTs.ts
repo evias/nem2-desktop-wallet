@@ -8,10 +8,12 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, formDataConfig,DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, StoreAccount, DefaultFee, AppWallet} from "@/core/model"
-import {getAbsoluteMosaicAmount, formatAddress} from "@/core/utils"
+import { formDataConfig } from '@/config/view/form'
+import {createBondedMultisigTransaction, StoreAccount} from "@/core/model"
+import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     components: {
@@ -32,8 +34,6 @@ export class MultisigConversionTs extends Vue {
     otherDetails = {}
     transactionList = []
     formItems = formDataConfig.multisigConversionForm
-    XEM: string = defaultNetworkConfig.XEM
-    formatAddress = formatAddress
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet
@@ -91,6 +91,16 @@ export class MultisigConversionTs extends Vue {
         return 3
     }
 
+    get defaultFees() {
+        return defaultNetworkConfig.defaultAggregateFees
+    }
+    
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+  
     initForm() {
         this.formItems = formDataConfig.multisigConversionForm
     }
@@ -101,12 +111,12 @@ export class MultisigConversionTs extends Vue {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return
         }
-        this.formItems.publicKeyList.push(currentAddress)
+        this.formItems.publickeyList.push(currentAddress)
         this.currentAddress = ''
     }
 
-    deleteAddress(index) {
-        this.formItem.publickeyList.splice(index, 1)
+    deleteAdress(index) {
+        this.formItems.publickeyList.splice(index, 1)
     }
 
     confirmInput() {
@@ -114,17 +124,17 @@ export class MultisigConversionTs extends Vue {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         const {address} = this.wallet
-        const {publicKeyList, minApproval, minRemoval} = this.formItems
-        const {feeAmount} = this
+        const {publickeyList, minApproval, minRemoval} = this.formItems
+        const {feeAmount} = this 
         this.transactionDetail = {
             "address": address,
             "min_approval": minApproval,
             "min_removal": minRemoval,
-            "cosigner": publicKeyList.join(','),
-            "fee": feeAmount / Math.pow(10, this.xemDivisibility)
+            "cosigner": publickeyList.join(','),
+            "fee": feeAmount/3*2
         }
         this.otherDetails = {
-            lockFee: feeAmount
+            lockFee: feeAmount/3
         }
         this.sendMultisigConversionTransaction()
         this.initForm()
@@ -140,8 +150,8 @@ export class MultisigConversionTs extends Vue {
     }
 
     checkForm(): boolean {
-        let {publicKeyList, minApproval, minRemoval} = this.formItems
-        if (publicKeyList.length < 1) {
+        let {publickeyList, minApproval, minRemoval} = this.formItems
+        if (publickeyList.length < 1) {
             this.showErrorMessage(this.$t(Message.CO_SIGNER_NULL_ERROR) + '')
             return false
         }
@@ -189,28 +199,17 @@ export class MultisigConversionTs extends Vue {
         }
     }
 
-    getMultisigAccountList() {
-        const that = this
-        if (!this.wallet) return
-        const {node, address} = this
-        new MultisigApiRxjs().getMultisigAccountInfo(
-            address,
-            node
-        ).subscribe((multisigInfo) => {
-            if (multisigInfo.cosignatories.length !== 0) {
-                that.isMultisig = true
-            }
-        })
-    }
-
-    sendMultisigConversionTransaction() {
-        const {xemDivisibility} = this
+    sendMultisignConversionTransaction() {
         // here lock fee should be relative param
-        let {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
-        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        const {networkType, node, publickey} = this
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+        let {publickeyList, minApproval, minRemoval} = this.formItems
+        const {feeAmount} = this
+        const bondedFee = feeAmount/3
+        const innerFee = feeAmount/3
+        const {networkType, publickey} = this
+        const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
+            MultisigCosignatoryModificationType.Add,
+            PublicAccount.createFromPublicKey(cosigner, networkType),
+        ))
 
         const multisigCosignatoryModificationList = publickeyList
             .map(cosigner => new MultisigCosignatoryModification(
@@ -242,10 +241,10 @@ export class MultisigConversionTs extends Vue {
 
     @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {publicKeyList, minApproval, minRemoval} = this.formItems
+        const {publickeyList, minApproval, minRemoval} = this.formItems
         const {feeAmount} = this
         // isCompleteForm
-        this.isCompleteForm = publicKeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && feeAmount + '' !== ''
+        this.isCompleteForm = publickeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && feeAmount + '' !== ''
         return
     }
 }

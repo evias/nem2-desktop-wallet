@@ -12,7 +12,7 @@
       </div>
       <div class="mosaicEditDialogBody">
         <div class="stepItem1">
-          <Form :model="formItems">
+          <Form :model="formItems" v-if="formItems.hex">
             <FormItem :label="$t('mosaic_ID')">
               <p class="mosaicTxt">{{itemMosaic.hex.toString().toUpperCase()}}</p>
             </FormItem>
@@ -34,7 +34,7 @@
                      :disabled="!itemMosaic.properties.supplyMutable"
                      :placeholder="$t('please_enter_the_amount_of_change')"
                      @input="changeSupply"
-              />
+              ></Input>
             </FormItem>
             <FormItem :label="$t('post_change_supply')">
               <p class="mosaicTxt">{{changedSupply}}</p>
@@ -48,7 +48,7 @@
             </FormItem>
             <FormItem :label="$t('password')">
               <Input v-model="formItems.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')" />
+                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem class="button_update">
               <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">

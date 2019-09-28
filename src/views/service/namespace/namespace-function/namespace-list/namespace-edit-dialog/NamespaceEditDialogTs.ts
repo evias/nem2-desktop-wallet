@@ -6,6 +6,7 @@ import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig}
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"
+import {defaultNetworkConfig} from '@/config'
 
 @Component({
     computed: {
@@ -19,18 +20,18 @@ export class NamespaceEditDialogTs extends Vue {
     isCompleteForm = true
     stepIndex = 0
     durationIntoDate: string = '0'
-    XEM: string = defaultNetworkConfig.XEM
-    formItems = formDataConfig.namespaceEditForm
+    formItems = formDataConfig.namesapceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
 
-    @Prop()
-    currentNamespace: AppNamespace
-
-    get show() {
-        return this.showNamespaceEditDialog
-    }
+    @Prop({
+        default: {
+            name: '',
+            duration: ''
+        }
+    })
+    currentNamespace: any
 
     set show(val) {
         if (!val) {
@@ -53,8 +54,8 @@ export class NamespaceEditDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get defaultFees(): DefaultFee[] {
-        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    get defaultFees() {
+        return defaultNetworkConfig.defaultFees
     }
 
     get feeAmount() {
@@ -136,13 +137,19 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.namespaceEditForm
+        this.formItems = formDataConfig.namesapceEditForm
         this.durationIntoDate = '0'
     }
 
-    @Watch('formItems', {deep: true})
+    @Watch('showNamespaceEditDialog')
+    onShowNamespaceEditDialogChange() {
+        this.show = this.showNamespaceEditDialog
+    }
+
+    @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {duration, password} = this.formItems
-        this.isCompleteForm = duration > 0 && password !== ''
+        const {name, duration, password} = this.formItems
+        // isCompleteForm
+        this.isCompleteForm = name !== '' && duration > 0 && password !== ''
     }
 }
