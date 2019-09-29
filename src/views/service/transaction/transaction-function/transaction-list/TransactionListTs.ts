@@ -9,6 +9,9 @@ import {defaultNetworkConfig} from '@/config/index'
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
     components: {TransactionModal},
+    props: {
+        isMinimized: Boolean
+    }
 })
 export class TransactionListTs extends Vue {
     app: AppInfo

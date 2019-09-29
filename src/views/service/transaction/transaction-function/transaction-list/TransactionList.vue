@@ -1,5 +1,9 @@
 <template>
-  <div class="transaction-list-container radius">
+  <div class="transaction-list-container radius"
+       v-bind:class="{ 
+         transactionListMinimized: isMinimized,
+         transactionListFullWidth: !isMinimized
+       }">
     <TransactionModal
             :visible="showDialog"
             :activeTransaction="activeTransaction"
@@ -118,7 +122,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {TransactionListTs} from '@/views/monitor/monitor-transaction-list/TransactionListTs.ts'
+    import {TransactionListTs} from '@/views/service/transaction/transaction-function/transaction-list/TransactionListTs.ts'
 
     export default class TransactionList extends TransactionListTs {
 

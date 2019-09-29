@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <TransactionList />
+    <TransactionList is-minimized />
   </div>
 </template>
 

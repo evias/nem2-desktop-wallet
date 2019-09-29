@@ -111,6 +111,7 @@ export const en_US = {
     dash_board: 'Dashboard',
     market: 'Market',
     transfer: 'Transfer',
+    Transaction_List: 'Transactions',
     Multisig_transfer: 'Multisig transfer',
     receipt: 'Receipts',
     remote: 'Harvested Blocks',
@@ -189,6 +190,7 @@ export const en_US = {
     use_the_NEM_Apostille_service_to_create_block_chain_notarized_timestamps_to_track_and_audit_file_authentication_status: 'Apostille enables notarizing and checking the authenticity of files notarized on the NEM block chain.',
     assign_tags_to_addresses_to_easily_track_contacts: 'Assign tags to addresses to easily track contacts.',
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates !',
+    transaction_introductory_text: 'View details about transactions instantly !',
 
 //   monitor-transfer
     transfer_target: 'To',
