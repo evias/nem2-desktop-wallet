@@ -83,6 +83,11 @@ const routers = [
             },
 
             {
+                path: '/transaction',
+                name: 'transaction',
+                // @ts-ignore
+                component: () => import('@/views/service/transaction/Transaction.vue')
+            },{
                 path: '/mosaic',
                 name: 'mosaic',
                 component: () => import('@/views/service/mosaic/Mosaic.vue')

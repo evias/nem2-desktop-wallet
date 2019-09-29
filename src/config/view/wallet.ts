@@ -1,4 +1,6 @@
 import {NetworkType} from "nem2-sdk"
+import transaction1Icon from "@/common/img/service/transaction1.png"
+import transaction2Icon from "@/common/img/service/transaction2.png"
 import mosaic1Icon from "@/common/img/service/mosaic1.png"
 import mosaic2Icon from "@/common/img/service/mosaic2.png"
 import multisign1Icon from "@/common/img/service/multisign1.png"
@@ -59,6 +61,14 @@ export const importKeystoreConfig = {
 }
 
 export const serviceSwitchFnConfig = [
+    {
+        name: 'transaction',
+        to: '/transaction',
+        iconDefault: transaction1Icon,
+        iconActive: transaction2Icon,
+        introduce: 'transaction_introductory_text',
+        active: false
+    },
     {
         name: 'mosaic',
         to: '/mosaic',
