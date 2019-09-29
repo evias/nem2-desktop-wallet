@@ -2,9 +2,9 @@ import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
-import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"
 
 @Component({
@@ -16,24 +16,29 @@ import {createRootNamespace} from "@/core/services/namespace"
 })
 export class NamespaceEditDialogTs extends Vue {
     activeAccount: StoreAccount
-    show = false
     isCompleteForm = false
     stepIndex = 0
     durationIntoDate: string = '0'
     formItems = formDataConfig.namesapceEditForm
+    XEM: string = defaultNetworkConfig.XEM
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
 
-    @Prop({
-        default: {
-            name: '',
-            duration: ''
-        }
-    })
-    currentNamespace: any
+    @Prop()
+    currentNamespace: AppNamespace
 
-    get wallet() {
+    get show() {
+        return this.showNamespaceEditDialog
+    }
+  
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
+  
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
@@ -61,7 +66,7 @@ export class NamespaceEditDialogTs extends Vue {
 
     namespaceEditDialogCancel() {
         this.initForm()
-        this.$emit('closeNamespaceEditDialog')
+        this.show = false
     }
 
     submit() {
@@ -136,15 +141,9 @@ export class NamespaceEditDialogTs extends Vue {
         this.durationIntoDate = '0'
     }
 
-    @Watch('showNamespaceEditDialog')
-    onShowNamespaceEditDialogChange() {
-        this.show = this.showNamespaceEditDialog
-    }
-
-    @Watch('formItems', {immediate: true, deep: true})
+    @Watch('formItems', {deep: true})
     onFormItemChange() {
-        const {name, duration, password} = this.formItems
-        // isCompleteForm
-        this.isCompleteForm = name !== '' && duration > 0 && password !== ''
+        const {duration, password} = this.formItems
+        this.isCompleteForm = duration > 0 && password !== ''
     }
 }

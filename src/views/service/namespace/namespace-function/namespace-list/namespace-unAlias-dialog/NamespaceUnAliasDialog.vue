@@ -12,26 +12,34 @@
       </div>
       <div class="mosaicAliasDialogBody">
         <div class="stepItem1">
-          <Form :model="formItem">
-            <FormItem :label="$t('mosaic_ID')">
+          <Form :model="formItems">
+            <formItems :label="$t('mosaic_ID')">
               <p class="mosaicTxt">{{unAliasItem.aliasTarget}}</p>
-            </FormItem>
-            <FormItem :label="$t('unbind_alias')">
+            </formItems>
+            <formItems :label="$t('unbind_alias')">
               <p class="mosaicTxt">{{unAliasItem.label}}</p>
-            </FormItem>
-            <FormItem :label="$t('fee')">
-              <Input v-model="formItem.fee" number required placeholder=""></Input>
-              <div class="tips">
-                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-              </div>
-            </FormItem>
-            <FormItem :label="$t('password')">
-              <Input v-model="formItem.password" type="password" required
+            </formItems>
+            <formItems :label="$t('fee')">
+              <Select
+                      class="fee-select"
+                      data-vv-name="fee"
+                      v-model="formItemss.feeSpeed"
+                      v-validate="'required'"
+                      :data-vv-as="$t('fee')"
+                      :placeholder="$t('fee')"
+              >
+                <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+                  {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+                </Option>
+              </Select>
+            </formItems>
+            <formItems :label="$t('password')">
+              <Input v-model="formItems.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
-            </FormItem>
-            <FormItem class="button_update">
+            </formItems>
+            <formItems class="button_update">
               <Button type="success" @click="submit">{{$t('unbind')}}</Button>
-            </FormItem>
+            </formItems>
           </Form>
         </div>
       </div>

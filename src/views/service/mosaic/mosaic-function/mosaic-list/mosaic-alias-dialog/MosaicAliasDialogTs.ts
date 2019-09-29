@@ -94,7 +94,7 @@ export class MosaicAliasDialogTs extends Vue {
 
     checkInfo() {
         const {formItems} = this
-        if (formItems.aliasName === '') {
+        if (formItems.mosaicName === '') {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
@@ -127,14 +127,14 @@ export class MosaicAliasDialogTs extends Vue {
 
     async updateMosaic() {
         const {node, generationHash, itemMosaic, feeAmount} = this
-        let {aliasName} = this.formItems
+        let {mosaicName} = this.formItems
         const {hex} = itemMosaic
-        console.log(hex, aliasName, 'hex, aliasNamehex, aliasNamehex, aliasName')
+        console.log(hex, mosaicName, 'hex, aliasNamehex, aliasNamehex, mosaicName')
         const {networkType} = this.wallet
         const password = new Password(this.formItems.password)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,
-            new NamespaceId(aliasName),
+            new NamespaceId(mosaicName),
             new MosaicId(hex),
             networkType,
             feeAmount
@@ -154,7 +154,7 @@ export class MosaicAliasDialogTs extends Vue {
     // @TODO: use v-model
     @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {aliasName, password} = this.formItems
-        this.isCompleteForm = aliasName !== '' && password !== ''
+        const {mosaicName, password} = this.formItems
+        this.isCompleteForm = mosaicName !== '' && password !== ''
     }
 }

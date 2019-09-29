@@ -102,7 +102,6 @@ export class NamespaceListTs extends Vue {
         const {currentHeight} = this
         const {address} = this.wallet
         return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
-
     }
 
     get namespaceLoading() {
@@ -136,25 +135,9 @@ export class NamespaceListTs extends Vue {
     }
 
 
-    closeMosaicAliasDialog() {
-        this.showMosaicAliasDialog = false
-    }
-
-    closeUnAliasDialog() {
-        this.showUnAliasDialog = false
-    }
-
     showEditDialog(namespaceName) {
         this.currentNamespace = namespaceName
         this.showNamespaceEditDialog = true
-    }
-
-    closeNamespaceEditDialog() {
-        this.showNamespaceEditDialog = false
-    }
-
-    closeAddressAliasDialog() {
-        this.isShowAddressAliasDialog = false
     }
 
     computeDuration(namespaceInfo) {
@@ -180,7 +163,6 @@ export class NamespaceListTs extends Vue {
     showAddressLinkDialog(aliasItem) {
         this.isShowAddressAliasDialog = true
         this.aliasDialogItem = aliasItem
-
     }
 
     durationToTime(duration) {
@@ -200,9 +182,9 @@ export class NamespaceListTs extends Vue {
         this.isShowExpiredNamesapce = !isShowExpiredNamesapce
     }
 
+    // @TODO: probably unnecessary
     @Watch('namespaceList', {deep: true})
     onNamespaceListChange() {
-
         this.initNamespace()
     }
 
@@ -214,5 +196,4 @@ export class NamespaceListTs extends Vue {
     mounted() {
         this.initNamespace()
     }
-
 }

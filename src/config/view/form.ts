@@ -16,7 +16,7 @@ export const formDataConfig = {
         password: ''
     },
     mosaicAliasForm: {
-        aliasName: '',
+        mosaicName: '',
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
@@ -31,6 +31,10 @@ export const formDataConfig = {
         password: ''
     },
     mosaicUnaliasForm: {
+        feeSpeed: FEE_SPEEDS.NORMAL,
+        password: ''
+    },
+    addressUnaliasForm: {
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
@@ -59,7 +63,6 @@ export const formDataConfig = {
         multisigPublickey: ''
     },
     namesapceEditForm: {
-        name: '',
         duration: 0,
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
