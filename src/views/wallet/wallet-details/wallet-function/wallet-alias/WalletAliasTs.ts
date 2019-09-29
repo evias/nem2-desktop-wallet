@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {StoreAccount, AppInfo, readLocaAlias, saveLocaAlias} from "@/core/model"
+import {StoreAccount, AppInfo, readLocaAlias, saveLocaAlias, removeLink} from "@/core/model"
 import {networkConfig} from "@/config/index"
 
 @Component({
@@ -99,7 +99,10 @@ export class WalletAliasTs extends Vue {
             title: message
         })
     }
-
+    removeLink(aliasObject){
+        removeLink(aliasObject, this.getWallet.address)
+        this.initLocalAlias()
+    }
     submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return

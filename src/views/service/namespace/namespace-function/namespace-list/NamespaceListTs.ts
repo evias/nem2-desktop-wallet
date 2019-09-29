@@ -3,10 +3,9 @@ import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Watch, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-import {networkConfig} from '@/config/index.ts'
+import {networkConfig, namespaceSortType} from '@/config'
 import {AppMosaics} from '@/core/services/mosaics'
-import {sortByBindType, sortByduration, sortByName, sortByOwnerShip} from "@/core/services/namespace"
-import {namespaceSortType} from "@/config/view/namespace"
+import {sortByBindType, sortByduration, sortByName, sortByOwnerShip, sortByBindInfo} from "@/core/services/namespace"
 import {StoreAccount, AppInfo, MosaicNamespaceStatusType} from "@/core/model"
 
 import NamespaceUnAliasDialog
@@ -15,6 +14,7 @@ import NamespaceMosaicAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-mosaic-alias-dialog/NamespaceMosaicAliasDialog.vue'
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
+
 @Component({
     components: {
         NamespaceEditDialog,
@@ -123,7 +123,7 @@ export class NamespaceListTs extends Vue {
                 this.currentNamespacelist = sortByduration(currentNamespacelist)
                 break
             case namespaceSortType.byBindInfo:
-                this.currentNamespacelist = sortByBindType(currentNamespacelist)
+                this.currentNamespacelist = sortByBindInfo(currentNamespacelist)
                 break
             case namespaceSortType.byBindType:
                 this.currentNamespacelist = sortByBindType(currentNamespacelist)
@@ -133,7 +133,6 @@ export class NamespaceListTs extends Vue {
                 break
         }
     }
-
 
     showEditDialog(namespaceName) {
         this.currentNamespace = namespaceName
