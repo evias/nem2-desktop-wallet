@@ -4,7 +4,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message, defaultNetworkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},
@@ -12,7 +12,6 @@ import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
 )
 export class NamespaceUnAliasDialogTs extends Vue {
     activeAccount: StoreAccount
-    show = false
     isCompleteForm = false
     aliasNameList: any[] = []
     formItems = formDataConfig.mosaicUnaliasForm
@@ -22,7 +21,17 @@ export class NamespaceUnAliasDialogTs extends Vue {
     showUnAliasDialog: boolean
 
     @Prop()
-    unAliasItem: any
+    activeNamespace: AppNamespace
+
+    get show() {
+        return this.showUnAliasDialog
+    }
+  
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet
@@ -94,11 +103,11 @@ export class NamespaceUnAliasDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        const {node, generationHash, xemDivisibility, feeAmount} = this
+        const {node, generationHash, feeAmount} = this
         const {networkType} = this.wallet
         const password = new Password(this.formItems.password)
-        let {hex, id, aliasTarget} = this.unAliasItem
-
+        const {hex, id, aliasTarget} = this.activeNamespace
+        console.log(aliasTarget.length >= 40, 'aliasTarget.length >= 40aliasTarget.length >= 40aliasTarget.length >= 40')
         const transaction = aliasTarget.length >= 40 // quickfix
             ? new NamespaceApiRxjs().addressAliasTransaction(
                 AliasActionType.Unlink,
@@ -109,7 +118,7 @@ export class NamespaceUnAliasDialogTs extends Vue {
             : new NamespaceApiRxjs().mosaicAliasTransaction(
                 AliasActionType.Unlink,
                 id,
-                new MosaicId(hex),
+                new MosaicId(aliasTarget),
                 networkType,
                 feeAmount)
         new AppWallet(this.wallet)

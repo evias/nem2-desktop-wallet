@@ -129,14 +129,14 @@
     <NamespaceUnAliasDialog
             v-if="showUnAliasDialog"
             :showUnAliasDialog="showUnAliasDialog"
-            :unAliasItem="aliasDialogItem"
+            :activeNamespace="aliasDialogItem"
             @close="showUnAliasDialog = false"
     />
 
     <NamespaceMosaicAliasDialog
             v-if="showMosaicAliasDialog"
             :showMosaicAliasDialog="showMosaicAliasDialog"
-            :itemMosaic="aliasDialogItem"
+            :activeNamespace="aliasDialogItem"
             @close="showMosaicAliasDialog = false"
     />
 
@@ -146,7 +146,6 @@
             :addressAliasItem="aliasDialogItem"
             @close="isShowAddressAliasDialog = false"
     />
-
   </div>
 </template>
 

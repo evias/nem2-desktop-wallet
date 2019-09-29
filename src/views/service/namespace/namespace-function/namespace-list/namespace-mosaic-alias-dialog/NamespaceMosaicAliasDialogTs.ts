@@ -27,7 +27,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     showMosaicAliasDialog: boolean
 
     @Prop()
-    activeNamespce: AppNamespace // @TODO: type, rename
+    activeNamespace: AppNamespace
 
     get show() {
         return this.showMosaicAliasDialog
@@ -129,7 +129,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     async updateMosaic() {
         const {node, generationHash, xemDivisibility, feeAmount} = this
         const {networkType} = this.wallet
-        const {name} = this.activeNamespce
+        const {name} = this.activeNamespace
         const {mosaicName, password} = this.formItems
         const transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,

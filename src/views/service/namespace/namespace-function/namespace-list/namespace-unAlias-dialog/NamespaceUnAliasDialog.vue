@@ -13,17 +13,17 @@
       <div class="mosaicAliasDialogBody">
         <div class="stepItem1">
           <Form :model="formItems">
-            <formItems :label="$t('mosaic_ID')">
-              <p class="mosaicTxt">{{unAliasItem.aliasTarget}}</p>
-            </formItems>
-            <formItems :label="$t('unbind_alias')">
-              <p class="mosaicTxt">{{unAliasItem.label}}</p>
-            </formItems>
-            <formItems :label="$t('fee')">
+            <FormItem :label="$t('mosaic_ID')">
+              <p class="mosaicTxt">{{activeNamespace.aliasTarget}}</p>
+            </FormItem>
+            <FormItem :label="$t('unbind_alias')">
+              <p class="mosaicTxt">{{activeNamespace.label}}</p>
+            </FormItem>
+            <FormItem :label="$t('fee')">
               <Select
                       class="fee-select"
                       data-vv-name="fee"
-                      v-model="formItemss.feeSpeed"
+                      v-model="formItems.feeSpeed"
                       v-validate="'required'"
                       :data-vv-as="$t('fee')"
                       :placeholder="$t('fee')"
@@ -32,14 +32,14 @@
                   {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
                 </Option>
               </Select>
-            </formItems>
-            <formItems :label="$t('password')">
+            </FormItem>
+            <FormItem :label="$t('password')">
               <Input v-model="formItems.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
-            </formItems>
-            <formItems class="button_update">
+            </FormItem>
+            <FormItem class="button_update">
               <Button type="success" @click="submit">{{$t('unbind')}}</Button>
-            </formItems>
+            </FormItem>
           </Form>
         </div>
       </div>
