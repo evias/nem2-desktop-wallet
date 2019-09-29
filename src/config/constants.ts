@@ -94,13 +94,13 @@ export const Message = {
     NODE_EXISTS_ERROR:'node_exists_error'
 }
 
-export const FEE_SPEEDS: Record<string, string> = {
+export const FEE_SPEEDS: Record <string, string> = {
     SLOW: 'SLOW',
     NORMAL: 'NORMAL',
     FAST: 'FAST',
 }
 
-export const FEE_GROUPS: Record<string, string> = {
+export const FEE_GROUPS: Record <string, string> = {
     SINGLE: 'SINGLE',
     DOUBLE: 'DOUBLE',
     TRIPLE: 'TRIPLE',
