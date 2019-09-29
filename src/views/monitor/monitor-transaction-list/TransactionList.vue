@@ -60,10 +60,10 @@
                 <!-- THIRD COLUMN -->
                 <div class="col3">
                 <span
-                        :class="['overflow_ellipsis',!c.isReceipt ? 'green' : 'red']"
+                        :class="['overflow_ellipsis', c.txHeader.isReceipt ? 'green' : 'red']"
                         v-if="c.rawTx.type === TransactionType.TRANSFER"
                 >
-                    {{ renderMosaics(c.rawTx.mosaics, mosaicList, currentXem) }}
+                    {{ c.txHeader.isReceipt ? '' : '-' }} {{ renderMosaics(c.rawTx.mosaics, mosaicList, currentXem) }}
                 </span>
                   <span
                           class="red "
