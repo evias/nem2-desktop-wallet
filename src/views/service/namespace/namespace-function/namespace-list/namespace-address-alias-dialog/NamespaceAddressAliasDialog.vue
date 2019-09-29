@@ -17,7 +17,7 @@
       <div class="input_content">
         <div class="title">{{$t('alias')}}</div>
         <div class="input_area">
-          {{addressAliasItem.label}}
+          {{activeNamespace.label}}
         </div>
       </div>
 

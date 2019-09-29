@@ -38,6 +38,11 @@ export const formDataConfig = {
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
+    addressAliasForm: {
+        address: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
+        password: ''
+    },
     mosaicTransactionForm: {
         restrictable: false,
         supply: 500000000,

@@ -4,7 +4,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {Message, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {formatSeconds, getAbsoluteMosaicAmount} from "@/core/utils"
-import {AppWallet, StoreAccount, AppInfo, DefaultFee} from "@/core/model"
+import {AppWallet, StoreAccount, AppInfo, DefaultFee, AppNamespace} from "@/core/model"
 
 @Component({
     computed: {
@@ -19,14 +19,14 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     app: AppInfo
     isCompleteForm = true
     aliasListIndex = -1
-    formItems = formDataConfig.mosaicUnaliasForm
+    formItems = formDataConfig.addressAliasForm
     XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     isShowAddressAliasDialog: boolean
 
     @Prop()
-    addressAliasItem: any // @TODO: type
+    activeNamespace: AppNamespace
 
     get show() {
         return this.isShowAddressAliasDialog
@@ -79,20 +79,15 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     closeModel() {
         this.$emit('closeAddressAliasDialog')
         this.aliasListIndex = -1
-        this.formItems = formDataConfig.mosaicUnaliasForm
+        this.formItems = formDataConfig.addressAliasForm
         this.show = false
     }
 
     checkForm(): boolean {
-        const {address, alias} = this.addressAliasItem
-        const {password} = this.formItems
+        const {password, address} = this.formItems
 
         if (address.length < 40) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
-            return false
-        }
-        if (!(alias || alias.trim())) {
-            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
         if (!(password || password.trim())) {
@@ -133,8 +128,8 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     addressAlias(type) {
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
             type ? AliasActionType.Link : AliasActionType.Unlink,
-            new NamespaceId(this.addressAliasItem.name),
-            Address.createFromRawAddress(this.addressAliasItem.address),
+            new NamespaceId(this.activeNamespace.name),
+            Address.createFromRawAddress(this.formItems.address),
             this.wallet.networkType,
             this.feeAmount
         )

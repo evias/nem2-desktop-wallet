@@ -143,7 +143,7 @@
     <NamespaceAddressAliasDialog
             v-if="isShowAddressAliasDialog"
             :isShowAddressAliasDialog="isShowAddressAliasDialog"
-            :addressAliasItem="aliasDialogItem"
+            :activeNamespace="aliasDialogItem"
             @close="isShowAddressAliasDialog = false"
     />
   </div>
