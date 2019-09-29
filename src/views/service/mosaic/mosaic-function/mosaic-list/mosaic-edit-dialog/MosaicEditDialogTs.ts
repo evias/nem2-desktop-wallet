@@ -1,8 +1,7 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {Password, NetworkType} from 'nem2-sdk'
+import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config/index.ts"
-import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 
@@ -34,17 +33,8 @@ export class MosaicEditDialogTs extends Vue {
             this.$emit('close')
         }
     }
-    get defaultFees(): DefaultFee[] {
-        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
-    }
 
-    get feeAmount() {
-        const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
-    }
-
-    get supply() {
+    get supply(): number {
         return this.itemMosaic.mosaicInfo.supply.compact()
     }
 
@@ -52,15 +42,15 @@ export class MosaicEditDialogTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get generationHash() {
+    get generationHash(): string {
         return this.activeAccount.generationHash
     }
 
-    get node() {
+    get node(): string {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
     }
 
@@ -72,9 +62,19 @@ export class MosaicEditDialogTs extends Vue {
         return this.wallet.networkType
     }
 
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    }
+
+    get feeAmount(): number {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
     mosaicEditDialogCancel() {
         this.initForm()
-        this.$emit('closeMosaicEditDialog')
+        this.show = false
     }
 
     // @TODO: make get newSupply() instead
@@ -142,32 +142,32 @@ export class MosaicEditDialogTs extends Vue {
         const {node, generationHash, feeAmount, mosaicId, networkType} = this
         const password = new Password(this.formItems.password)
         const {delta, supplyType} = this.formItems
-        const transaction = new MosaicApiRxjs().mosaicSupplyChange(
-            mosaicId,
-            delta,
-            supplyType,
-            networkType,
-            feeAmount
-        )
-        this.show = false
-        new AppWallet(this.wallet)
-            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
-    }
 
-    updatedMosaic() {
-        this.show = false
-        this.mosaicEditDialogCancel()
-        this.$Notice.success({
-            title: this.$t('mosaic_operation') + '',
-            desc: this.$t('update_completed') + ''
-        })
+        new AppWallet(this.wallet).signAndAnnounceNormal(
+            password,
+            node,
+            generationHash,
+            [
+                  MosaicSupplyChangeTransaction.create(
+                      Deadline.create(),
+                      new MosaicId(mosaicId),
+                      supplyType,
+                      UInt64.fromUint(delta),
+                      networkType,
+                      UInt64.fromUint(feeAmount)
+                  )
+            ],
+            this,
+        )
+
+        this.mosaicEditDialogCancel
     }
 
     initForm() {
         this.formItems = formDataConfig.mosaicEditForm
     }
 
-    @Watch('formItems', {immediate: true, deep: true})
+    @Watch('formItems', {deep: true})
     onFormItemChange() {
         const {delta, password} = this.formItems
         this.isCompleteForm = parseInt(delta.toString()) >= 0 && password !== ''

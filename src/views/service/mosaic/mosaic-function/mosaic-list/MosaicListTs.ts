@@ -17,7 +17,7 @@ import {
     sortByAlias
 } from '@/core/services/mosaics/methods.ts'
 import {networkConfig} from "@/config"
-import {MosaicNamespaceStatusType, StoreAccount, AppInfo} from "@/core/model"
+import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic} from "@/core/model"
 
 @Component({
     components: {
@@ -41,7 +41,7 @@ export class MosaicListTs extends Vue {
     showMosaicAliasDialog = false
     showMosaicUnAliasDialog = false
     mosaicMapInfo: any = {}
-    selectedMosaic: any = {}
+    selectedMosaic: AppMosaic = null
     currentSortType = mosaicSortType.byId
     mosaicSortType = mosaicSortType
     currentMosaicList = []
@@ -103,10 +103,6 @@ export class MosaicListTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    showCheckDialog() {
-        this.showCheckPWDialog = true
-    }
-
     toggleChange(page) {
         this.currentPage = page
     }
@@ -115,44 +111,22 @@ export class MosaicListTs extends Vue {
         return formatNumber(number)
     }
 
-
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
-    }
-
     showAliasDialog(item) {
-        console.log(item, 'call')
         this.selectedMosaic = item
         this.showMosaicAliasDialog = true
     }
 
     showUnAliasDialog(item) {
-        document.body.click()
         this.selectedMosaic = item
-        setTimeout(() => {
-            this.showMosaicUnAliasDialog = true
-        })
+        this.showMosaicUnAliasDialog = true
     }
 
-    closeMosaicAliasDialog() {
-        this.showMosaicAliasDialog = false
-    }
-
-    closeMosaicUnAliasDialog() {
-        this.showMosaicUnAliasDialog = false
-    }
 
     showEditDialog(item) {
-        document.body.click()
         this.selectedMosaic = item
-        setTimeout(() => {
-            this.showMosaicEditDialog = true
-        }, 0)
+        this.showMosaicEditDialog = true
     }
 
-    closeMosaicEditDialog(item) {
-        this.showMosaicEditDialog = false
-    }
 
     computeDuration(item) {
         if (!item.mosaicInfo) return 'Loading...'

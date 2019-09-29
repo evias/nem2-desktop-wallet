@@ -71,17 +71,6 @@ export class MosaicAliasDialogTs extends Vue {
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 
-    mosaicAliasDialogCancel() {
-        this.initForm()
-        this.$emit('closeMosaicAliasDialog')
-    }
-
-    submit() {
-        if (!this.isCompleteForm) return
-        if (!this.checkInfo()) return
-        this.updateMosaic()
-    }
-
     get defaultFees(): DefaultFee[] {
         return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
@@ -90,6 +79,17 @@ export class MosaicAliasDialogTs extends Vue {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
+    mosaicAliasDialogCancel() {
+        this.initForm()
+        this.show = false
+    }
+
+    submit() {
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
+        this.updateMosaic()
     }
 
     checkInfo() {
@@ -143,13 +143,9 @@ export class MosaicAliasDialogTs extends Vue {
         new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()
-        this.updatedMosaicAlias()
-    }
-
-    updatedMosaicAlias() {
-        this.show = false
         this.mosaicAliasDialogCancel()
     }
+
 
     initForm() {
         this.formItems = formDataConfig.mosaicAliasForm

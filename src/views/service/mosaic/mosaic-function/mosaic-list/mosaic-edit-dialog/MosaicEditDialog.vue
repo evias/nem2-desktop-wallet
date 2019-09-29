@@ -12,7 +12,7 @@
       </div>
       <div class="mosaicEditDialogBody">
         <div class="stepItem1">
-          <Form :model="formItems" v-if="formItems.hex">
+          <Form :model="formItems">
             <FormItem :label="$t('mosaic_ID')">
               <p class="mosaicTxt">{{itemMosaic.hex.toString().toUpperCase()}}</p>
             </FormItem>

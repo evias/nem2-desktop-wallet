@@ -138,12 +138,24 @@
       <p class="green_text">{{$t('mosaic_attribute_text')}}</p>
       <p>{{$t('mosaic_attribute_text_2')}}</p>
     </div>
-    <MosaicAliasDialog :showMosaicAliasDialog="showMosaicAliasDialog" :itemMosaic="selectedMosaic"
-                       @closeMosaicAliasDialog="closeMosaicAliasDialog"></MosaicAliasDialog>
-    <MosaicUnAliasDialog :showMosaicUnAliasDialog="showMosaicUnAliasDialog" :itemMosaic="selectedMosaic"
-                         @closeMosaicUnAliasDialog="closeMosaicUnAliasDialog"></MosaicUnAliasDialog>
-    <EditDialog :showMosaicEditDialog="showMosaicEditDialog" :itemMosaic="selectedMosaic"
-                @closeMosaicEditDialog="closeMosaicEditDialog"></EditDialog>
+    <MosaicAliasDialog
+        v-if="showMosaicAliasDialog"
+        :showMosaicAliasDialog="showMosaicAliasDialog"
+        :itemMosaic="selectedMosaic"
+        @close="showMosaicAliasDialog = false"
+    />
+    <MosaicUnAliasDialog
+        v-if="showMosaicUnAliasDialog"
+        :showMosaicUnAliasDialog="showMosaicUnAliasDialog"
+        :itemMosaic="selectedMosaic"
+        @close="showMosaicUnAliasDialog = false"
+    />
+    <EditDialog
+        v-if="showMosaicEditDialog"
+        :showMosaicEditDialog="showMosaicEditDialog"
+        :itemMosaic="selectedMosaic"
+        @close="showMosaicEditDialog = false"
+    />
   </div>
 </template>
 
