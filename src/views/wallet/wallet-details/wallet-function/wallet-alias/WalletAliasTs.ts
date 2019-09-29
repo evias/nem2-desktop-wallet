@@ -39,7 +39,7 @@ export class WalletAliasTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get namespaceList() {
+    get NamespaceList() {
         return this.activeAccount.namespaces
     }
 

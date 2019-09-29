@@ -58,7 +58,7 @@ export class SubNamespaceTs extends Vue {
         return this.activeAccount.wallet.address
     }
 
-    get namespaceList() {
+    get NamespaceList() {
         return this.activeAccount.namespaces ? this.activeAccount.namespaces : []
     }
 
@@ -69,7 +69,7 @@ export class SubNamespaceTs extends Vue {
     get activeNamespaceList() {
         const {currentHeight, namespaceGracePeriodDuration} = this
         // @TODO handle namespace list loading state
-        return this.namespaceList
+        return this.NamespaceList
             .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
             .map(alias => ({label: alias.label, value: alias.label}))
     }
@@ -77,7 +77,7 @@ export class SubNamespaceTs extends Vue {
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
     }
-    
+
     get accountPublicKey(): string {
         return this.activeAccount.wallet.publicKey
     }
@@ -108,7 +108,7 @@ export class SubNamespaceTs extends Vue {
             ? Address.createFromPublicKey(activeMultisigAccount, this.wallet.networkType).plain()
             : null
     }
-  
+
     get multisigNamespaceList(): any {
         const {currentHeight, namespaceGracePeriodDuration, activeMultisigAddress} = this
         if (!activeMultisigAddress) return []

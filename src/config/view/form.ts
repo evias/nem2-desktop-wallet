@@ -67,7 +67,8 @@ export const formDataConfig = {
         cosignerList: [],
         multisigPublickey: ''
     },
-    namesapceEditForm: {
+    namespaceEditForm: {
+        name: '',
         duration: 0,
         feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''

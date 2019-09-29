@@ -15,12 +15,12 @@ import {createRootNamespace} from "@/core/services/namespace"
     }
 })
 export class NamespaceEditDialogTs extends Vue {
-    activeAccount: StoreAccount
-    isCompleteForm = false
+    activeAccount: any
+    isCompleteForm = true
     stepIndex = 0
     durationIntoDate: string = '0'
-    formItems = formDataConfig.namesapceEditForm
     XEM: string = defaultNetworkConfig.XEM
+    formItems = formDataConfig.namespaceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
@@ -31,13 +31,12 @@ export class NamespaceEditDialogTs extends Vue {
     get show() {
         return this.showNamespaceEditDialog
     }
-  
+
     set show(val) {
         if (!val) {
             this.$emit('close')
         }
     }
-  
     get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
@@ -137,7 +136,7 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.namesapceEditForm
+        this.formItems = formDataConfig.namespaceEditForm
         this.durationIntoDate = '0'
     }
 

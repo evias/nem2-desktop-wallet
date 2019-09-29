@@ -44,7 +44,7 @@ export class TheBindFormTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get namespaceList() {
+    get NamespaceList() {
         return this.activeAccount.namespaces
     }
 
@@ -61,12 +61,12 @@ export class TheBindFormTs extends Vue {
     }
 
     get aliasList() {
-        return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
+        return this.NamespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
     }
 
     get aliasActionTypeList() {
         const {currentHeight} = this
-        return this.namespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
+        return this.NamespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
     }
 
 

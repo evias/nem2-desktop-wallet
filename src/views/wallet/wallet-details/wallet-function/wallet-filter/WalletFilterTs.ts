@@ -40,7 +40,7 @@ export class WalletFilterTs extends Vue {
         password: '',
     }
 
-    namespaceList = []
+    NamespaceList = []
 
     clearCurrentFilter() {
         this.currentFilter = ''

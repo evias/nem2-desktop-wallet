@@ -66,7 +66,7 @@
             return this.activeAccount.currentXEM1
         }
 
-        get namespaceList() {
+        get NamespaceList() {
             return this.activeAccount.namespaces
         }
 
@@ -139,7 +139,7 @@
                 ])
 
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
-                
+
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
                     this.chainListeners.start()
@@ -180,11 +180,11 @@
                     mosaicsAmountViewFromAddress(node, accountAddress),
                 ])
 
-                const appNamespaces = promises[0] 
+                const appNamespaces = promises[0]
                 // @TODO: refactor
                 const mosaicAmountViews = promises[1]
                 const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-                
+
                 await Promise.all([
                     this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
                       address, mosaics: appMosaics,
@@ -199,7 +199,7 @@
                       address, mosaics: appMosaicsFromNamespaces,
                 })
             } catch (error) {
-                throw new Error(error) 
+                throw new Error(error)
             }
         }
 

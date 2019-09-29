@@ -32,7 +32,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     get show() {
         return this.showMosaicAliasDialog
     }
-  
+
     set show(val) {
         if (!val) {
             this.$emit('close')
@@ -149,7 +149,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     @Watch('formItems', {deep: true})
-    onformItemsChange() {
+    onFormItemsChange() {
         const {password} = this.formItems
         this.isCompleteForm = password !== ''
     }
