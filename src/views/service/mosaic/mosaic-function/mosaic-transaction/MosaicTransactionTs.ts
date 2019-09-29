@@ -124,11 +124,6 @@ export class MosaicTransactionTs extends Vue {
         if (this.announceInLock) return 3
     }
 
-    initForm(): void {
-        this.formItems = formDataConfig.mosaicTransactionForm
-        this.formItems.multisigPublickey = this.accountPublicKey
-    }
-
     get durationIntoDate(): string {
         const duration = Number(this.formItems.duration)
         if (Number.isNaN(duration)) {
@@ -142,6 +137,11 @@ export class MosaicTransactionTs extends Vue {
             this.formItems.duration = 0
         }
         return formatSeconds(duration * 12)
+    }
+
+    initForm(): void {
+        this.formItems = formDataConfig.mosaicTransactionForm
+        this.formItems.multisigPublickey = this.accountPublicKey
     }
 
     addDivisibilityAmount() {

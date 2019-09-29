@@ -115,6 +115,7 @@
                     this.$store.commit('SET_MOSAICS_LOADING', true),
                     this.$store.commit('SET_NAMESPACE_LOADING', true),
                     this.$store.commit('SET_MULTISIG_LOADING', true),
+                    this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null),
                 ])
 
                 //@TODO: moove from there

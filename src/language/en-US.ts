@@ -747,7 +747,7 @@ export const en_US = {
     mosaic_attribute_text_2: 'You can bind a specific namespace to a mosaic to make it distinguishable.',
     importance: 'importance',
     Under_the_current_wallet: 'Under the current wallet, namespace and sub-namespace asset list, transaction management list',
-    define: 'Define',
+    define: 'Definition',
     A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name: 'A namespace starts with a name that you choose, similar to an internet domain name. ',
     Namespace_description: 'Namespace description',
     The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters: ' The name must appear as unique in the network, and may have a maximum length of 64 characters.',

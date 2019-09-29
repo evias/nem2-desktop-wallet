@@ -1,14 +1,13 @@
 import {mapState} from "vuex"
-import {PublicAccount, MultisigAccountInfo} from "nem2-sdk"
+import {PublicAccount, MultisigAccountInfo, NetworkType, Address} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig, rootNamespaceTypeConfig} from "@/config/index.ts"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
 } from '@/core/utils'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo, DefaultFee} from "@/core/model"
-
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
 @Component({
     components: {
         CheckPWDialog
@@ -30,30 +29,71 @@ export class RootNamespaceTs extends Vue {
     showCheckPWDialog = false
     transactionList = []
     otherDetails: any = {}
-    typeList = rootNamespaceTypeConfig
     formItems = formDataConfig.rootNamespaceForm
+    XEM: string = defaultNetworkConfig.XEM
+    formatAddress = formatAddress
 
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get node() {
-        return this.activeAccount.node
-    }
-
-    get wallet() {
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
-    get address() {
+    get activeMultisigAccount(): string {
+        return this.activeAccount.activeMultisigAccount
+    }
+
+    get announceInLock(): boolean {
+        const {activeMultisigAccount, networkType} = this
+        if (!this.activeMultisigAccount) return false
+        const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
+        return this.activeAccount.multisigAccountInfo[address].minApproval > 1
+    }
+
+    get multisigInfo(): MultisigAccountInfo {
+        const {address} = this.wallet
+        return this.activeAccount.multisigAccountInfo[address]
+    }
+
+    get hasMultisigAccounts(): boolean {
+        if (!this.multisigInfo) return false
+        return this.multisigInfo.multisigAccounts.length > 0
+    }
+
+    get multisigPublickeyList(): {publicKey: string, address: string}[] {
+        if (!this.hasMultisigAccounts) return null
+        return [
+          {
+            publicKey: this.accountPublicKey,
+            address: `(self) ${formatAddress(this.address)}`,
+          },
+          ...this.multisigInfo.multisigAccounts
+            .map(({publicKey}) => ({
+                publicKey,
+                address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+            })),
+        ]
+    }
+
+    get address(): string {
         return this.activeAccount.wallet.address
     }
 
-    get xemDivisibility() {
+    get networkType(): NetworkType {
+        return this.activeAccount.wallet.networkType
+    }
+
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
     }
 
-    initForm() {
+    get generationHash(): string {
+        return this.activeAccount.generationHash
+    }
+
+    get node(): string {
+        return this.activeAccount.node
+    }
+
+    initForm(): void {
         this.formItems = formDataConfig.rootNamespaceForm
     }
     
@@ -68,42 +108,23 @@ export class RootNamespaceTs extends Vue {
     get multisigAccounts(): PublicAccount[] {
         return this.multisigAccountInfo ? this.multisigAccountInfo.multisigAccounts : []
     }
-    
-    get multisigPublickeyList(): any {
-        const {multisigAccounts} = this
-        const {accountPublicKey} = this
-        const mainPublicKeyItem = {
-            value: accountPublicKey,
-            label: '(self)' + accountPublicKey
-        }
-
-        return [mainPublicKeyItem, ...multisigAccounts
-            .map(({publicKey}) => ({value: publicKey, label: publicKey}))]
-    }
 
     get defaultFees(): DefaultFee[] {
-        return this.typeList[0].isSelected ? DEFAULT_FEES[FEE_GROUPS.TRIPLE] : DEFAULT_FEES[FEE_GROUPS.SINGLE]
+        if (!this.activeMultisigAccount) return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+        if (!this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.DOUBLE]
+        if (this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
     }
 
-    get feeAmount() {
+    get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
-    formatAddress(address) {
-        return formatAddress(address)
-    }
-
-    switchAccountType(index) {
-        this.initForm()
-        let list = this.typeList
-        list = list.map((item) => {
-            item.isSelected = false
-            return item
-        })
-        list[index].isSelected = true
-        this.typeList = list
+    get feeDivider(): number {
+        if (!this.activeMultisigAccount) return 1
+        if (!this.announceInLock) return 2
+        if (this.announceInLock) return 3
     }
 
     async createBySelf() {
@@ -167,7 +188,7 @@ export class RootNamespaceTs extends Vue {
         const {duration, rootNamespaceName, multisigPublickey} = this.formItems
 
         // check multisig
-        if (this.typeList[1].isSelected) {
+        if (this.hasMultisigAccounts) {
             if (!multisigPublickey) {
                 this.$Notice.error({
                     title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
@@ -230,24 +251,29 @@ export class RootNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {feeAmount} = this
+        const {feeAmount, xemDivisibility} = this
         const {address} = this.wallet
         const {duration, rootNamespaceName} = this.formItems
-        const feeDivider = this.typeList[0].isSelected ? 2 : 3
         this.transactionDetail = {
             "address": address,
             "duration": duration,
             "namespace": rootNamespaceName,
-            "fee": feeAmount/feeDivider
+            "fee": feeAmount / Math.pow(10, xemDivisibility),
         }
-        this.otherDetails = {
-            lockFee: feeAmount/feeDivider
+
+        if (this.announceInLock) {
+            this.otherDetails = {
+                lockFee: feeAmount / 3
+            }
         }
-        if (this.typeList[0].isSelected) {
-            this.createBySelf()
-        } else {
+
+        if (this.activeMultisigAccount) {
             this.createByMultisig()
+            this.showCheckPWDialog = true
+            return
         }
+    
+        this.createBySelf()
         this.showCheckPWDialog = true
     }
 
@@ -269,12 +295,14 @@ export class RootNamespaceTs extends Vue {
     @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
         const {duration, rootNamespaceName, multisigPublickey} = this.formItems
-
-        // isCompleteForm
-        if (this.typeList[0].isSelected) {
+        if (!this.activeMultisigAccount) {
             this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== ''
             return
         }
         this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
+    }
+
+    mounted() {
+        this.formItems.multisigPublickey = this.accountPublicKey
     }
 }
