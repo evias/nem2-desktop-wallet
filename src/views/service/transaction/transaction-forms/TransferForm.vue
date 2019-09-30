@@ -166,13 +166,13 @@
 </template>
 
 <script lang="ts">
-    import {TransactionFormTs} from '@/views/monitor/monitor-transfer/transactions/TransactionFormTs.ts'
+    import {TransferFormTs} from '@/views/service/transaction/transaction-forms/TransferFormTs.ts'
 
-    export default class MultisigTransferTransaction extends TransactionFormTs {
+    export default class TransferForm extends TransferFormTs {
 
     }
 
 </script>
 <style scoped lang="less">
-  @import "TransactionForm.less";
+  @import "TransferForm.less";
 </style>

@@ -3,7 +3,7 @@
     <div class="left_container radius ">
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
-          <MultisigTransferTransaction></MultisigTransferTransaction>
+          <TransferForm></TransferForm>
         </div>
       </div>
     </div>
@@ -13,13 +13,13 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {MonitorTransferTs} from '@/views/monitor/monitor-transfer/MonitorTransferTs.ts'
+    import {TransferPageTs} from '@/views/service/transaction/transfer-page/TransferPageTs.ts'
 
 
-    export default class MonitorTransfer extends MonitorTransferTs {
+    export default class TransferPage extends TransferPageTs {
 
     }
 </script>
 <style scoped lang="less">
-  @import "MonitorTransfer.less";
+  @import "TransferPage.less";
 </style>

@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
-import TransactionList from './transaction-function/transaction-list/TransactionList.vue'
-import MonitorTransfer from '@/views/monitor/monitor-transfer/MonitorTransfer.vue'
+import TransactionList from './transaction-list/TransactionList.vue'
+import TransferPage from './transfer-page/TransferPage.vue'
 import {mapState} from "vuex"
 import {transactionButtonConfig} from "@/config/view/transaction";
 import {StoreAccount} from "@/core/model"
@@ -8,7 +8,7 @@ import {StoreAccount} from "@/core/model"
 @Component({
     components: {
         TransactionList,
-        MonitorTransfer
+        TransferPage
     },
     computed: {
         ...mapState({

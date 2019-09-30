@@ -13,7 +13,7 @@
 
     <div class="sub_function_container scroll radius">
       <TransactionList v-if="buttonList[0].isSelected"/>
-      <MonitorTransfer v-if="buttonList[1].isSelected"/>
+      <TransferPage v-if="buttonList[1].isSelected"/>
     </div>
 
 

@@ -18,15 +18,15 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
                     }, {
+                        path: '/create-transfer',
+                        name: 'transferForm',
+                        // @ts-ignore
+                        component: () => import('@/views/monitor/monitor-form-transfer/MonitorFormTransfer.vue')
+                    }, {
                         path: '/market',
                         name: 'market',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-market/MonitorMarket.vue')
-                    }, {
-                        path: '/transfer',
-                        name: 'transfer',
-                        // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-transfer/MonitorTransfer.vue')
                     }, {
                         path: '/invoice',
                         name: 'invoice',
@@ -86,7 +86,13 @@ const routers = [
                 path: '/transaction',
                 name: 'transaction',
                 // @ts-ignore
-                component: () => import('@/views/service/transaction/Transaction.vue')
+                component: () => import('@/views/service/transaction/Transaction.vue'),
+                children: [{
+                    path: '/transaction/form/transfer',
+                    name: 'transfer',
+                    // @ts-ignore
+                    component: () => import('@/views/service/transaction/transfer-page/TransferPage.vue')
+                }]
             },{
                 path: '/mosaic',
                 name: 'mosaic',

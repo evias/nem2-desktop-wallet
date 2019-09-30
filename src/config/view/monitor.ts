@@ -11,7 +11,7 @@ export const monitorPanelNavigatorConfig: Array<{
         {
             name: 'transfer',
             isSelect: false,
-            path: 'transfer'
+            path: 'transferForm'
         },
         {
             name: 'Invoice',
@@ -50,7 +50,7 @@ export const monitorReceiptTransferTypeConfig = [
     }
 ]
 
-export const monitorTransferTransferTypeConfig = [
+export const transferPageTypeConfig = [
     {
         name: 'ordinary_transfer',
         isSelect: true,

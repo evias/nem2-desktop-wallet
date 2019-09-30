@@ -23,7 +23,7 @@ import {defaultNetworkConfig} from '@/config/index'
         })
     },
 })
-export class TransactionFormTs extends Vue {
+export class TransferFormTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo

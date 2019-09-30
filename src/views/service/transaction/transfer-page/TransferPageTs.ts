@@ -1,14 +1,14 @@
 import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
-import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transactions/TransactionForm.vue'
+import TransferForm from '@/views/service/transaction/transaction-forms/TransferForm.vue'
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
-import {monitorTransferTransferTypeConfig} from '@/config/view/monitor'
+import {transferPageTypeConfig} from '@/config/view/monitor'
 import {StoreAccount} from "@/core/model"
 
 @Component({
     components: {
-        MultisigTransferTransaction,
+        TransferForm,
         CollectionRecord,
     },
     computed: {
@@ -17,10 +17,10 @@ import {StoreAccount} from "@/core/model"
         })
     }
 })
-export class MonitorTransferTs extends Vue {
+export class TransferPageTs extends Vue {
     activeAccount: StoreAccount
     transferType = TransferType
-    transferTypeList = monitorTransferTransferTypeConfig
+    transferTypeList = transferPageTypeConfig
     currentPrice = 0
 
     get getWallet() {
