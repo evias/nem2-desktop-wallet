@@ -31,8 +31,8 @@ export class MenuBarTs extends Vue {
     inputNodeValue = ''
     isNowWindowMax = false
     isShowDialog = true
-    activePanelList = [false, false, false, false, false, false, false,]
-    monitorSelected = monitorSelected
+    activePanelList = [false, false, false, false, false, false, false, false]
+    monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
     accountAddress = ''
     txStatusListener = null
