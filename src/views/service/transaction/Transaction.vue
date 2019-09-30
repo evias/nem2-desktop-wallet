@@ -2,20 +2,19 @@
   <div class="transaction_container">
     <div class="top_navigator radius">
       <span
-              v-for="(b,index) in buttonList"
-              :key="index"
-              class="button_list_item "
-      >
-        <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchButton(index)">{{$t(b.name)}}</span>
-        <span class="line" v-if="index !== (buttonList.length -1) ">|</span>
+                :class="[n.isSelected?'active_navigator':'','outter_container','pointer']"
+                @click="switchPanel(index)"
+                v-for="(n,index) in navigatorList"
+                :key="index"
+        >
+        <span class="inner_container absolute">{{$t(n.name)}}</span>
+        <span class="line">|</span>
       </span>
     </div>
 
-    <div class="sub_function_container scroll radius">
-      <TransactionList v-if="buttonList[0].isSelected"/>
-      <TransferPage v-if="buttonList[1].isSelected"/>
+    <div class="bottom_router_view">
+      <router-view/>
     </div>
-
 
   </div>
 </template>

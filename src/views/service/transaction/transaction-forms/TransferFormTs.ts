@@ -21,7 +21,7 @@ import {defaultNetworkConfig} from '@/config/index'
             activeAccount: 'account',
             app: 'app'
         })
-    },
+    }
 })
 export class TransferFormTs extends Vue {
     @Provide() validator: any = this.$validator

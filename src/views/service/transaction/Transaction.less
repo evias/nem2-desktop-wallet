@@ -39,9 +39,78 @@
     }
   }
 
-  .sub_function_container {
-    position: relative;
-    height: calc(100% - 80px);
-    margin-top: 20px;
+  .bottom_router_view {
+    height: 100%;
+  }
+
+  .top_navigator {
+    background-color: white;
+    height: 60px;
+    color: #666;
+
+    .outter_container {
+      font-size: 18px;
+      position: relative;
+      width: 200px;
+      height: 100%;
+      color: #666;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .outter_container:last-of-type {
+      .line {
+        color: transparent;
+      }
+    }
+
+    .disabled {
+      color: #ccc;
+      background-color: white;
+      cursor: not-allowed;
+      height: 20px;
+    }
+
+    .active_navigator {
+      position: relative;
+      font-size: 20px;
+      font-weight: bold;
+
+      .inner_container {
+        color: rgba(32, 181, 172, 1);
+      }
+    }
+
+    .inner_container {
+      position: relative;
+      line-height: 60px;
+      padding-bottom: 20px;
+    }
+
+    .line {
+      display: inline-block;
+      width: 1px;
+      height: 20px;
+      float: right;
+      line-height: 60px;
+      font-size: 20px;
+      padding-bottom: 20px;
+      color: #ccc;
+      font-weight: normal;
+    }
+
+    .active_navigator {
+      .inner_container:after {
+        background-color: rgba(32, 181, 172, 1);
+        display: block;
+        position: absolute;
+        content: '';
+        bottom: 0;
+        width: 30px;
+        height: 3px;
+        margin-left: 50%;
+        left: -15px;
+      }
+    }
   }
 }

@@ -7,65 +7,21 @@
     /> 
 
     <div class="top_title">
-      <span>{{transactionType === transferType.RECEIVED
-          ? $t('collection_record') : $t('transfer_sent')}}</span>
-      <div class="right" v-show="!isShowSearchDetail">
-            <span class="select_date pointer">
-              <div class="month_value">
-                <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
-              <span>{{currentMonth}}</span>
-              </div>
-              <div class="date_selector">
-                <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"
-                            style="width: 70px"></DatePicker>
-              </div>
-            </span>
-        <span class="search_input un_click" @click.stop="">
-              <img src="@/common/img/monitor/market/marketSearch.png" alt="">
-              <span>{{$t('search')}}</span>
-            </span>
-      </div>
-      <div v-show="isShowSearchDetail" class="search_expand">
-            <span class="search_container">
-              <img src="@/common/img/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute" v-model="transactionHash"
-                     :placeholder="$t('enter_asset_type_alias_or_address_search')">
-            </span>
-        <span class="search_btn pointer " @click.stop="searchByasset">{{$t('search')}}</span>
-      </div>
+      <span>{{filterOrigin === transferType.RECEIVED
+          ? $t('transfer_received') : $t('transfer_sent')}}</span>
     </div>
 
-    <!-- @TODO: merge this block with the confirmed transaction one -->
     <div :class="['bottom_transfer_record_list','scroll']">
       <Spin v-if="transactionsLoading" size="large" fix />
-      <div
-              v-for="(c, index) in unConfirmedTransactionList"
-              :key="`${index}ucf`"
-              class="transaction_record_item pointer"
-              @click="showDialog = true; activeTransaction = c"
-      >
-        <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
-        <div class="flex_content">
-          <div class="left left_components">
-            <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, mosaicList, currentXem) }}</div>
-            <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
-          </div>
-          <div class="right">
-            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}</div>
-            <div class="bottom overflow_ellipsis">
-              {{formatNumber(c.txHeader.block)}}
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div
-              v-for="(c, index) in slicedConfirmedTransactionList"
+              v-for="(c, index) in pagedTransactionList"
               :key="`${index}cf`"
               class="transaction_record_item pointer"
               @click="showDialog = true; activeTransaction = c"
       >
-        <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
+        <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
+        <img v-if="!c.isTxUnconfirmed" src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
             <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, mosaicList, currentXem) }}</div>
@@ -80,7 +36,7 @@
         </div>
       </div>
 
-      <div class="no_data" v-if="slicedConfirmedTransactionList.length == 0 && !transactionsLoading">
+      <div class="no_data" v-if="pagedTransactionList.length == 0 && !transactionsLoading">
         {{$t('no_confirmed_transactions')}}
       </div>
     </div>

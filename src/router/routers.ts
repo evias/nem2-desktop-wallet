@@ -88,8 +88,13 @@ const routers = [
                 // @ts-ignore
                 component: () => import('@/views/service/transaction/Transaction.vue'),
                 children: [{
+                    path: '/transaction/list',
+                    name: 'transactionList',
+                    // @ts-ignore
+                    component: () => import('@/views/service/transaction/transaction-list/TransactionList.vue')
+                }, {
                     path: '/transaction/form/transfer',
-                    name: 'transfer',
+                    name: 'transferPage',
                     // @ts-ignore
                     component: () => import('@/views/service/transaction/transfer-page/TransferPage.vue')
                 }]

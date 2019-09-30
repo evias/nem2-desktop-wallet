@@ -1,3 +1,4 @@
+import {TransactionType} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import TransferForm from '@/views/service/transaction/transaction-forms/TransferForm.vue'
@@ -19,6 +20,7 @@ import {StoreAccount} from "@/core/model"
 })
 export class TransferPageTs extends Vue {
     activeAccount: StoreAccount
+    transactionType = TransactionType
     transferType = TransferType
     transferTypeList = transferPageTypeConfig
     currentPrice = 0
@@ -33,14 +35,6 @@ export class TransferPageTs extends Vue {
 
     get node() {
         return this.activeAccount.node
-    }
-
-    showSearchDetail() {
-        // this.isShowSearchDetail = true
-    }
-
-    hideSearchDetail() {
-
     }
 
     switchTransferType(index) {

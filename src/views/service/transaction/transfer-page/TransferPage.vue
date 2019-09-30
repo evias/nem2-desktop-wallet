@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction_content secondary_page_animate" @click="hideSearchDetail()">
+  <div class="transaction_content secondary_page_animate">
     <div class="left_container radius ">
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
@@ -7,7 +7,8 @@
         </div>
       </div>
     </div>
-    <CollectionRecord :transactionType="transferType.SENT" />
+    <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.SENT" />
+    <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.RECEIVED" />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, TransferTransaction} from 'nem2-sdk'
+import {Address, NamespaceId, TransferTransaction} from 'nem2-sdk'
 
 export class FormattedTransfer extends FormattedTransaction {
     infoFirst: string
@@ -16,11 +16,14 @@ export class FormattedTransfer extends FormattedTransaction {
         super(tx, address, currentXem, xemDivisibility, store)
 
         const {rawTx}: any = this
-        this.infoFirst = this.txHeader.isReceipt ? rawTx.signer.address.plain() : rawTx.recipientAddress.address
-            
+
+        const from = rawTx.signer.address.plain();
+        const to = rawTx.recipient instanceof Address ? (rawTx.recipient as Address).plain() : (rawTx.recipient as NamespaceId).toHex();
+
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'from': this.infoFirst,
+            'from': from,
+            'to': to,
             'mosaic': rawTx.mosaics,
             'fee': getRelativeMosaicAmount(rawTx.maxFee.compact(), xemDivisibility) + 'XEM',
             'block': this.txHeader.block,

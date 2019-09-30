@@ -9,8 +9,8 @@
     >
       <div class="transfer_type ">
         <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value overflow_ellipsis">{{activeTransaction.dialogDetailMap
-            ? $t(activeTransaction.dialogDetailMap.transfer_type) :'-'}}
+        <span class="value overflow_ellipsis">
+          {{activeTransaction.dialogDetailMap ? $t(activeTransaction.dialogDetailMap.transfer_type) :'-'}}
         </span>
       </div>
       <div>

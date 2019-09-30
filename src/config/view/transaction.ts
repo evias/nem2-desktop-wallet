@@ -68,13 +68,3 @@ export const transactionTypeConfig = {
         value: TransactionType.LINK_ACCOUNT
     }
 }
-
-export const transactionButtonConfig = [
-    {
-        name: 'Transaction_list',
-        isSelected: true
-    }, {
-        name: 'Transfer',
-        isSelected: false
-    }
-]
