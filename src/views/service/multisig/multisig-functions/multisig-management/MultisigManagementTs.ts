@@ -225,7 +225,7 @@ export class MultisigManagementTs extends Vue {
         if (cosignerList.length < 1) {
             return true
         }
-        const publickeyFlag = cosignerList.every((item) => {
+        const publicKeyFlag = cosignerList.every((item) => {
             if (item.type == CosignatoryModificationAction.Add) {
                 this.hasAddCosigner = true
             }

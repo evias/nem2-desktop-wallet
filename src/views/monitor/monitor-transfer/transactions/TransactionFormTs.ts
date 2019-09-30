@@ -3,10 +3,9 @@ import {mapState} from "vuex"
 import {Message, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {standardFields} from "@/core/validation"
+import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress} from "@/core/utils"
+import {standardFields, isAddress} from "@/core/validation"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee} from "@/core/model"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {formDataConfig} from '@/config/view/form'

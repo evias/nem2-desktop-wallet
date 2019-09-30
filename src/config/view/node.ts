@@ -1,6 +1,6 @@
 export const nodeListConfig: Array<{ value: string, name: string, url: string, isSelected: boolean }> = [
     {
-        value: 'http://c2.nem.ninja:3000'
+        value: 'http://47.108.88.254:3000'
         name: 'ntcn',
         url: '47.108.88.254',
         isSelected: true,
