@@ -8,19 +8,14 @@ import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
 import {networkConfig} from "@/config"
 import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic} from "@/core/model"
-import {
-    sortByMosaicAlias, sortByMosaicDivisibility,
-    sortByMosaicDuration,
-    sortByMosaicId, sortByMosaicRestrictable,
-    sortByMosaicSupply, sortByMosaicSupplyMutable,
-    sortByMosaicTransferable
-} from "@/core/services"
+import PageTutorial from '@/common/vue/page-tutorial/PageTutorial.vue'
 
 @Component({
     components: {
         MosaicAliasDialog,
         MosaicUnAliasDialog,
-        EditDialog
+        EditDialog,
+        PageTutorial
     },
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })

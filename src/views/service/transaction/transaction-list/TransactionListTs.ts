@@ -5,10 +5,11 @@ import {formatNumber, renderMosaics} from '@/core/utils'
 import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model'
 import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
 import {defaultNetworkConfig} from '@/config/index'
+import PageTutorial from '@/common/vue/page-tutorial/PageTutorial.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
-    components: {TransactionModal},
+    components: {TransactionModal, PageTutorial},
     props: {
         isMinimized: Boolean
     }

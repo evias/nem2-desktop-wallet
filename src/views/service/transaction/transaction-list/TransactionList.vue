@@ -2,7 +2,7 @@
   <div class="transaction-list-container radius"
        v-bind:class="{ 
          transactionListMinimized: isMinimized,
-         transactionListFullWidth: !isMinimized
+         transactionListFullHeight: !isMinimized
        }">
     <TransactionModal
             :visible="showDialog"

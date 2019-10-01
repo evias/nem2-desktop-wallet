@@ -18,7 +18,7 @@
       </div>
 
     </div>
-    <CollectionRecord :transactionType="TransferType.RECEIVED"></CollectionRecord>
+    <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.RECEIVED" />
 
     <div class="modal scroll">
       <div class="modal_title">{{$t('set_amount')}}</div>

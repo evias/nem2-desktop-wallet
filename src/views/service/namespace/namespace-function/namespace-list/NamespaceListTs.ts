@@ -3,9 +3,11 @@ import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-import {networkConfig} from '@/config'
-import {AppMosaics, sortNamespaceList, namespaceSortTypes} from '@/core/services'
-import {StoreAccount, AppInfo, MosaicNamespaceStatusType, AppNamespace} from "@/core/model"
+import {networkConfig, namespaceSortType} from '@/config'
+import {AppMosaics} from '@/core/services/mosaics'
+import {sortByBindType, sortByduration, sortByName, sortByOwnerShip, sortByBindInfo} from "@/core/services/namespace"
+import {StoreAccount, AppInfo, MosaicNamespaceStatusType} from "@/core/model"
+import PageTutorial from '@/common/vue/page-tutorial/PageTutorial.vue'
 
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
@@ -19,8 +21,8 @@ import NamespaceAddressAliasDialog
         NamespaceEditDialog,
         NamespaceUnAliasDialog,
         NamespaceMosaicAliasDialog,
-        NamespaceAddressAliasDialog
-
+        NamespaceAddressAliasDialog,
+        PageTutorial,
     },
     computed: {
         ...mapState({

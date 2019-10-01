@@ -79,6 +79,18 @@
       .inner_container {
         color: rgba(32, 181, 172, 1);
       }
+
+      .inner_container:after {
+        background-color: rgba(32, 181, 172, 1);
+        display: block;
+        position: absolute;
+        content: '';
+        bottom: 0;
+        width: 30px;
+        height: 3px;
+        margin-left: 50%;
+        left: -15px;
+      }
     }
 
     .inner_container {
@@ -99,18 +111,5 @@
       font-weight: normal;
     }
 
-    .active_navigator {
-      .inner_container:after {
-        background-color: rgba(32, 181, 172, 1);
-        display: block;
-        position: absolute;
-        content: '';
-        bottom: 0;
-        width: 30px;
-        height: 3px;
-        margin-left: 50%;
-        left: -15px;
-      }
-    }
   }
 }

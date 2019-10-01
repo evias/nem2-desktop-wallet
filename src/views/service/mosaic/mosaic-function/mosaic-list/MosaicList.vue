@@ -133,14 +133,15 @@
       </div>
     </div>
 
-    <div class="right_container radius">
-      <p class="right_container_title">{{$t('mosaic_assets')}}</p>
-      <p>{{$t('describe')}}</p>
-      <p class="green_text">{{$t('mosaic_describe_text')}}</p>
-      <p>{{$t('attribute')}}</p>
-      <p class="green_text">{{$t('mosaic_attribute_text')}}</p>
-      <p>{{$t('mosaic_attribute_text_2')}}</p>
-    </div>
+    <PageTutorial :pageTitle="'mosaic_assets'"
+                  :titles="['describe', 'attribute', 'attribute2']"
+                  :explanations="[
+                    'mosaic_describe_text',
+                    'mosaic_attribute_text',
+                    'mosaic_attribute_text_2',
+                  ]"
+                  />
+
     <MosaicAliasDialog
         v-if="showMosaicAliasDialog"
         :showMosaicAliasDialog="showMosaicAliasDialog"

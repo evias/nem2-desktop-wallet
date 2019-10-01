@@ -723,6 +723,13 @@ export const en_US = {
     please_set_your_wallet_path: 'Please set your wallet path',
     please_accurately_copy_the_hd_wallet_path: 'Please accurately copy the hd-wallet path',
 
+    // page tutorials
+    tutorial_transfer_page_title: 'Transfers (Send & Receive)',
+    tutorial_transfer_title_1: 'Transfer of tokens',
+    tutorial_transfer_explanation_1: 'Send & receive tokens with your account or attach messages to transfer transactions.',
+    tutorial_transfer_title_2: 'Sending multiple tokens',
+    tutorial_transfer_explanation_2: 'You can attach up to 10 different tokens in one transfer transaction. Recipients and tokens can be named by their on-chain aliases.',
+
     //trezor
     connect_trezor_title: 'Connect to a Trezor Hardware Wallet',
     connect_trezor_prompt: 'Connect to Trezor',
@@ -753,7 +760,8 @@ export const en_US = {
     mosaic_assets: 'Mosaic (digital assets)',
     describe: 'Description',
     mosaic_describe_text: 'A mosaic could be a token, but it could also be a collection of more specialized assets such as reward points, company shares, signatures, status flags, votes or even currencies.',
-    attribute: 'Attribute',
+    attribute: 'Properties',
+    attribute2: 'Binding aliases',
     mosaic_attribute_text: 'Each mosaic has a unique identifier and a set of configurable properties, This makes it very flexible to adapt to many scenarios.',
     mosaic_attribute_text_2: 'You can bind a specific namespace to a mosaic to make it distinguishable.',
     importance: 'importance',
@@ -761,6 +769,7 @@ export const en_US = {
     define: 'Definition',
     A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name: 'A namespace starts with a name that you choose, similar to an internet domain name. ',
     Namespace_description: 'Namespace description',
+    Namespace_levels: 'Namespace depth',
     The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters: ' The name must appear as unique in the network, and may have a maximum length of 64 characters.',
     Namespaces_can_have_up_to_3_levels: 'Namespaces can have up to 3 levels, a namespace and its two levels of sub namespace domains. A sub namespace sub namespace does not have a duration by its own; it inherits the duration from its parent namespace.',
     scenes_to_be_used: 'Scenes to be used',

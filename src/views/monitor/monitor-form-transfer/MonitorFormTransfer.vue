@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction_content secondary_page_animate" @click="hideSearchDetail()">
+  <div class="transaction_content secondary_page_animate">
     <div class="left_container radius ">
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
@@ -7,19 +7,18 @@
         </div>
       </div>
     </div>
-    <CollectionRecord :transactionType="transferType.SENT" />
+    <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.SENT" />
   </div>
 </template>
 
 <script lang="ts">
     // @ts-ignore
-    import {TransferPageTs} from '@/views/service/transaction/transfer-page/TransferPageTs.ts'
+    import {MonitorFormTransferTs} from '@/views/monitor/monitor-form-transfer/MonitorFormTransferTs.ts'
 
-
-    export default class MonitorFormTransfer extends TransferPageTs {
+    export default class MonitorFormTransfer extends MonitorFormTransferTs {
 
     }
 </script>
 <style scoped lang="less">
-  @import "../../service/transaction/transfer-page/TransferPage.less";
+  @import "MonitorFormTransfer.less";
 </style>

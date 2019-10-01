@@ -4,7 +4,7 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
-import {MosaicId, NamespaceId, AliasType} from "nem2-sdk"
+import {MosaicId, NamespaceId, AliasType, TransactionType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
@@ -33,7 +33,8 @@ export class MonitorInvoiceTs extends Vue {
     notes = ''
     QRCode: string = ''
     transactionHash = ''
-    TransferType = TransferType
+    transferType = TransferType
+    transactionType = TransactionType
     isShowDialog = false
     transferTypeList = monitorReceiptTransferTypeConfig
     qrInfo = {

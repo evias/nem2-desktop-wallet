@@ -1,7 +1,6 @@
 import {TransactionType} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
-import PageTutorial from '@/common/vue/page-tutorial/PageTutorial.vue'
 import TransferForm from '@/views/service/transaction/transaction-forms/TransferForm.vue'
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
@@ -11,8 +10,7 @@ import {StoreAccount} from "@/core/model"
 @Component({
     components: {
         TransferForm,
-        CollectionRecord,
-        PageTutorial,
+        CollectionRecord
     },
     computed: {
         ...mapState({
@@ -20,7 +18,7 @@ import {StoreAccount} from "@/core/model"
         })
     }
 })
-export class TransferPageTs extends Vue {
+export class MonitorFormTransferTs extends Vue {
     activeAccount: StoreAccount
     transactionType = TransactionType
     transferType = TransferType

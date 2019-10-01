@@ -7,8 +7,13 @@
         </div>
       </div>
     </div>
+
+    <PageTutorial :pageTitle="'tutorial_transfer_page_title'"
+                  :titles="['tutorial_transfer_title_1', 'tutorial_transfer_title_2']"
+                  :explanations="['tutorial_transfer_explanation_1', 'tutorial_transfer_explanation_2']"
+                  />
+
     <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.SENT" />
-    <CollectionRecord :filterType="transactionType.Transfer" :filterOrigin="transferType.RECEIVED" />
   </div>
 </template>
 

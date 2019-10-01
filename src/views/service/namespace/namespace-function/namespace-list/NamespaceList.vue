@@ -132,17 +132,15 @@
       </div>
     </div>
 
-    <div class="right_container radius">
-      <p class="right_container_head">{{$t('namespace')}}</p>
-      <p class="second_head">{{$t('define')}}</p>
-      <p class="green">{{$t('A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name')}}</p>
-      <p class="second_head">{{$t('Namespace_description')}}</p>
-      <p class="green">
-        {{$t('The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters')}}</p>
-      <p>{{$t('Namespaces_can_have_up_to_3_levels')}}</p>
-      <p class="second_head">{{$t('scenes_to_be_used')}}</p>
-      <p>{{$t('Used_to_bind_a_wallet_address')}}</p>
-    </div>
+    <PageTutorial :pageTitle="'namespace'"
+                  :titles="['define', 'Namespace_description', 'Namespace_levels', 'scenes_to_be_used']"
+                  :explanations="[
+                    'A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name',
+                    'The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters',
+                    'Namespaces_can_have_up_to_3_levels',
+                    'Used_to_bind_a_wallet_address'
+                  ]"
+                  />
 
     <NamespaceEditDialog
             v-if="showNamespaceEditDialog"
