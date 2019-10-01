@@ -749,4 +749,25 @@ export const zh_CN = {
     SLOW: '慢',
     NORMAL: '正常',
     FAST: '快',
+    //////////////////////////////////////////////0927
+    seed_wallet_can_not_be_more_than_10: '本账户创建钱包数量已达上限，请更换账户以创建新钱包。',
+    create_or_import: '创建或导入',
+    create_sub_wallet: '创建子钱包',
+    Import_private_key: '导入私钥',
+    copy_mnemonic: '复制助记词',
+
+    // page tutorials
+    tutorial_transfer_page_title: 'Transfers (Send & Receive)',
+    tutorial_transfer_title_1: 'Transfer of tokens',
+    tutorial_transfer_explanation_1: 'Send & receive tokens with your account or attach messages to transfer transactions.',
+    tutorial_transfer_title_2: 'Sending multiple tokens',
+    tutorial_transfer_explanation_2: 'You can attach up to 10 different tokens in one transfer transaction. Recipients and tokens can be named by their on-chain aliases.',
+
+    tutorial_transaction_list_title: 'Transactions',
+    tutorial_transaction_title_1: 'Unit of work',
+    tutorial_transaction_explanation_1: 'A transaction generally represents a unit of work within a database system. In the case of blockchain, that is when an action signed by an account changes its state.',
+    tutorial_transaction_title_2: 'Transaction types',
+    tutorial_transaction_explanation_2: 'There are different types of transactions. For example, you can transfer mosaics between accounts, transfer or configure the ownership of accounts (including the use of multi-signature rules), create or issue new mosaics, bind namespaces to accounts or mosaics with aliases, and more.',
+    tutorial_transaction_title_3: 'Aggregate transactions',
+    tutorial_transaction_explanation_3: 'Aggregate transactions merge multiple transactions into one, allowing trustless swaps, and other advanced logic. NEM does this by generating a one-time disposable smart contract. When all involved accounts have cosigned the AggregateTransaction, all the inner transactions are executed at the same time.'
 }

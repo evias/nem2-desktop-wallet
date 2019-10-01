@@ -738,5 +738,21 @@ export const jp_JP = {
     Add_to_local_address_book: 'ローカルアドレス帳に追加',
     contact_list: '通信録',
     meta_data: 'メタデータ',
-    node_exists_error: 'ノードは既に存在します'
+    node_exists_error: 'ノードは既に存在します',
+
+    // page tutorials
+    tutorial_transfer_page_title: 'Transfers (Send & Receive)',
+    tutorial_transfer_title_1: 'Transfer of tokens',
+    tutorial_transfer_explanation_1: 'Send & receive tokens with your account or attach messages to transfer transactions.',
+    tutorial_transfer_title_2: 'Sending multiple tokens',
+    tutorial_transfer_explanation_2: 'You can attach up to 10 different tokens in one transfer transaction. Recipients and tokens can be named by their on-chain aliases.',
+
+    tutorial_transaction_list_title: 'Transactions',
+    tutorial_transaction_title_1: 'Unit of work',
+    tutorial_transaction_explanation_1: 'A transaction generally represents a unit of work within a database system. In the case of blockchain, that is when an action signed by an account changes its state.',
+    tutorial_transaction_title_2: 'Transaction types',
+    tutorial_transaction_explanation_2: 'There are different types of transactions. For example, you can transfer mosaics between accounts, transfer or configure the ownership of accounts (including the use of multi-signature rules), create or issue new mosaics, bind namespaces to accounts or mosaics with aliases, and more.',
+    tutorial_transaction_title_3: 'Aggregate transactions',
+    tutorial_transaction_explanation_3: 'Aggregate transactions merge multiple transactions into one, allowing trustless swaps, and other advanced logic. NEM does this by generating a one-time disposable smart contract. When all involved accounts have cosigned the AggregateTransaction, all the inner transactions are executed at the same time.'
+
 }
