@@ -1,13 +1,14 @@
 .transaction-list-container.transactionListMinimized {
   height: calc(100% - 4.56rem);
+  overflow: scroll;
 }
 
 .transaction-list-container.transactionListFullHeight {
   height: 100%;
+  overflow: hidden;
 }
 
 .transaction-list-container {
-  overflow: hidden;
   margin-top: 15px;
 
   .inner_transaction_title {
@@ -30,7 +31,7 @@
   }
 
   .left_container {
-    width: 1305px;
+    width: 1300px;
     float: left;
     background-color: white;
     padding: 0.15rem 0.31rem;

@@ -19,7 +19,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {TransferPageTs} from '@/views/service/transaction/transfer-page/TransferPageTs.ts'
+    import {TransferPageTs} from '@/views/service/transaction/pages/TransferPageTs.ts'
 
 
     export default class TransferPage extends TransferPageTs {

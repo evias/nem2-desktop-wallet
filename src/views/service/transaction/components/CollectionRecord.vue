@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-    import {CollectionRecordTs} from '@/common/vue/collection-record/CollectionRecordTs.ts'
+    import {CollectionRecordTs} from '@/views/service/transaction/components/CollectionRecordTs.ts'
     export default class CollectionRecord extends CollectionRecordTs {
     }
 </script>

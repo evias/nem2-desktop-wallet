@@ -37,8 +37,19 @@ export const transactionTag = {
 }
 
 export const Message = {
-    COPY_SUCCESS: 'successful_copy',
+
+    // success messages
     SUCCESS: 'success',
+    SUCCESS_COPY: 'successful_copy',
+    SUCCESS_TRANSACTION_SIGNED: 'success_transaction_signed',
+    SUCCESS_ACCOUNT_UNLOCK: 'success_account_unlock',
+    SUCCESS_ANNOUNCED_TRANSACTION: 'success_announced_transaction',
+
+    // error messages
+    ERROR_VERIFY_FORM: 'error_verify_form',
+
+    // legacy (@TODO rewrite)
+    COPY_SUCCESS: 'successful_copy',
     OPERATION_SUCCESS: 'successful_operation',
     UPDATE_SUCCESS: 'update_completed',
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',

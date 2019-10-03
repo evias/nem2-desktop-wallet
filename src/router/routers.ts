@@ -91,12 +91,22 @@ const routers = [
                     path: '/transaction/list',
                     name: 'transactionList',
                     // @ts-ignore
-                    component: () => import('@/views/service/transaction/transaction-list/TransactionList.vue')
+                    component: () => import('@/views/service/transaction/components/TransactionList.vue')
                 }, {
                     path: '/transaction/form/transfer',
-                    name: 'transferPage',
+                    name: 'createTransferPage',
                     // @ts-ignore
-                    component: () => import('@/views/service/transaction/transfer-page/TransferPage.vue')
+                    component: () => import('@/views/service/transaction/pages/TransferPage.vue')
+                }, {
+                    path: '/transaction/form/mosaic-definition',
+                    name: 'createMosaicPage',
+                    // @ts-ignore
+                    component: () => import('@/views/service/transaction/pages/MosaicDefinitionPage.vue')
+                }, {
+                    path: '/transaction/form/uri',
+                    name: 'readTransactionURI',
+                    // @ts-ignore
+                    component: () => import('@/views/service/transaction/pages/TransactionURIPage.vue')
                 }]
             },{
                 path: '/mosaic',

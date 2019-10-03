@@ -1,0 +1,120 @@
+.form-component-wrapper {
+  position: relative;
+
+  .no_data {
+    text-align: center;
+    line-height: 50px;
+    color: #999;
+  }
+  .no-border {border: unset !important; font-size: 16px;}
+
+  .no-scroll { overflow: hidden }
+
+  .action-button {
+    float: left;
+    width: 0.45rem;
+    height: 0.45rem;
+    background-color: #4DC2BF;
+    font-size: 0.2rem;
+    font-weight: 400;
+    color: #ffffff;
+    border-radius: 0 4px 4px 0;
+    text-align: center;
+  }
+
+  .field-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    //padding: 8px 0;
+    line-height: 45px;
+
+    .field-label {
+      display: inline-block;
+      width: 110px;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+
+    .field-value-wrapper {
+      width: 560px;
+      overflow: hidden;
+      height: 45px;
+      border: 1px solid rgba(204, 204, 204, 1);
+    }
+    
+    .field-tooltip {
+      margin-left: 140px;
+      width: 558px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      line-height: 18px;
+
+      .red {
+        color: #F65C5C;
+      } 
+      .green {
+        color: #4DC2BF;
+      }
+    }
+
+  }
+
+  input {
+    width: 540px;
+    border: none;
+    outline: none;
+    padding-left: 20px;
+    padding-right: 15px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  input::placeholder {
+    color: rgba(204, 204, 204, 1);
+  }
+
+  .field-wrapper {
+
+    span {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      background-color: #4DC2BF;
+      color: white;
+      font-size: 20px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      text-align: center;
+    }
+
+    input {
+      border-radius: 0;
+    }
+  }
+
+  .scroll-wrapper {
+    margin: 0 5px;
+    height: 190px;
+  }
+
+  .icon-delete {
+    display: inline-block;
+    background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 15px;
+    height: 15px;
+  }
+
+    .icon-delete:hover {
+      background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdeleteHover.png");
+    }
+  }
+  
+  }

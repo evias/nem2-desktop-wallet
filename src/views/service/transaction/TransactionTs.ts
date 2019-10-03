@@ -1,13 +1,15 @@
 import {Component, Vue} from 'vue-property-decorator'
-import TransactionList from './transaction-list/TransactionList.vue'
-import TransferPage from './transfer-page/TransferPage.vue'
+import TransactionList from './components/TransactionList.vue'
+import TransferPage from './pages/TransferPage.vue'
+import MosaicDefinitionPage from './pages/MosaicDefinitionPage.vue'
 import {mapState} from "vuex"
 import {StoreAccount} from "@/core/model"
 
 @Component({
     components: {
         TransactionList,
-        TransferPage
+        TransferPage,
+        MosaicDefinitionPage
     },
     computed: {
         ...mapState({
@@ -27,9 +29,19 @@ export class TransactionTs extends Vue {
             path: 'transactionList'
         },
         {
-            name: 'transfer',
+            name: 'tab_create_transfer',
             isSelected: false,
-            path: 'transferPage'
+            path: 'createTransferPage'
+        },
+        {
+            name: 'tab_create_mosaic',
+            isSelected: false,
+            path: 'createMosaicPage'
+        },
+        {
+            name: 'tab_read_uri',
+            isSelected: false,
+            path: 'readTransactionURI'
         }
     ]
 

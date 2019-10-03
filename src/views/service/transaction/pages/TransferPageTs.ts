@@ -1,8 +1,8 @@
 import {TransactionType} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
-import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import CollectionRecord from '@/views/service/transaction/components/CollectionRecord.vue';
 import PageTutorial from '@/common/vue/page-tutorial/PageTutorial.vue'
-import TransferForm from '@/views/service/transaction/transaction-forms/TransferForm.vue'
+import TransferForm from '@/views/service/transaction/forms/TransferForm.vue'
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
 import {transferPageTypeConfig} from '@/config/view/monitor'

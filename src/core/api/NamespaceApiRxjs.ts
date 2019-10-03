@@ -85,7 +85,14 @@ export class NamespaceApiRxjs {
     ) {
         const namespaceHttp = new NamespaceHttp(url)
         return namespaceHttp.getLinkedMosaicId(namespaceId)
+    }
 
+    async getLinkedAddress(
+        namespaceId: NamespaceId,
+        url: string
+    ): Promise<Address> {
+        const namespaceHttp = new NamespaceHttp(url)
+        return await namespaceHttp.getLinkedAddress(namespaceId).toPromise()
     }
 
     async getNamespacesFromAccount(address: Address, url: string) {

@@ -660,6 +660,11 @@ export const en_US = {
     please_choose_entity_type: 'Please choose entity type',
     Node_connection_failed: 'Node connection failed',
     // Forms
+
+    field_label_sender: 'From',
+    field_label_signer: 'Signer',
+    button_send: 'Send',
+
     newPassword: 'New password',
     LABEL_new_password: 'New password',
     HINT_new_password1: 'Should be between 8 and 32 chars.',
@@ -737,6 +742,22 @@ export const en_US = {
     tutorial_transaction_explanation_2: 'There are different types of transactions. For example, you can transfer mosaics between accounts, transfer or configure the ownership of accounts (including the use of multi-signature rules), create or issue new mosaics, bind namespaces to accounts or mosaics with aliases, and more.',
     tutorial_transaction_title_3: 'Aggregate transactions',
     tutorial_transaction_explanation_3: 'Aggregate transactions merge multiple transactions into one, allowing trustless swaps, and other advanced logic. NEM does this by generating a one-time disposable smart contract. When all involved accounts have cosigned the AggregateTransaction, all the inner transactions are executed at the same time.',
+
+    tutorial_mosaic_page_title: 'Mosaic (digital assets)',
+    tutorial_mosaic_title_1: 'Description',
+    tutorial_mosaic_explanation_1: 'A mosaic could be a token, but it could also be a collection of more specialized assets such as reward points, company shares, signatures, status flags, votes or even currencies.',
+    tutorial_mosaic_title_2: 'Properties',
+    tutorial_mosaic_explanation_2: 'Each mosaic has a unique identifier and a set of configurable properties, This makes it very flexible to adapt to many scenarios.',
+    tutorial_mosaic_title_3: 'Binding aliases',
+    tutorial_mosaic_explanation_3: 'You can bind a specific namespace to a mosaic to make it distinguishable.',
+
+    // transaction center
+    tab_transaction_list: 'Transactions',
+    tab_create_transfer: 'Create transfer',
+    tab_create_mosaic: 'Create mosaic',
+    tab_create_namespace: 'Create namespace',
+    tab_create_alias: 'Create alias',
+    tab_read_uri: 'Transaction URI',
 
     //trezor
     connect_trezor_title: 'Connect to a Trezor Hardware Wallet',

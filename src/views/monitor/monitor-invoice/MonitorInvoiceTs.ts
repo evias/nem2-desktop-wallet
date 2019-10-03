@@ -2,7 +2,7 @@ import {defaultNetworkConfig, Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import CollectionRecord from '@/views/service/transaction/components/CollectionRecord.vue';
 import {mapState} from "vuex"
 import {MosaicId, NamespaceId, AliasType, TransactionType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"

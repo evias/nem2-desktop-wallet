@@ -80,6 +80,10 @@ export const formDataConfig = {
         networkType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-privateKey',
     },
+    transactionURIForm: {
+        payload: '',
+        generationHash: ''
+    },
     trezorImportForm: {
         networkType: 0,
         accountIndex: 0,

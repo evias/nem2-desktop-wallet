@@ -134,7 +134,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {TransactionListTs} from '@/views/service/transaction/transaction-list/TransactionListTs.ts'
+    import {TransactionListTs} from '@/views/service/transaction/components/TransactionListTs.ts'
 
     export default class TransactionList extends TransactionListTs {
 

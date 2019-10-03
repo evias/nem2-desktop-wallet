@@ -5,7 +5,14 @@ import {localRead, getObjectLength, getTopValueInObject} from "@/core/utils/util
 import {Message} from "@/config"
 import {AppInfo, StoreAccount} from "@/core/model"
 
+import { validate } from 'vee-validate'
+
+// internal dependencies
+import { ValidatedFormTs } from '@/components/validated-form/ValidatedFormTs';
+import ValidatedForm from '@/components/validated-form/ValidatedForm.vue';
+
 @Component({
+    extends: ValidatedForm,
     computed: {
         ...mapState({
             app: 'app',
@@ -13,7 +20,7 @@ import {AppInfo, StoreAccount} from "@/core/model"
         })
     }
 })
-export class InputLockTs extends Vue {
+export class InputLockTs extends ValidatedFormTs {
     app: AppInfo
     activeAccount: StoreAccount
     passwordFieldValidation = standardFields.previousPassword.validation
@@ -28,10 +35,6 @@ export class InputLockTs extends Vue {
     formItems = {
         currentAccountName: '',
         password: ''
-    }
-
-    showPrompt() {
-        this.isShowPrompt = true
     }
 
     showIndexView() {
@@ -75,8 +78,8 @@ export class InputLockTs extends Vue {
         this.$Notice.error({title: this.$t(text) + ''})
     }
 
-    submit() {
-        const {currentAccountName} = this.formItems
+    onSubmit() {
+        const {currentAccountName} = this.formItem
         const {accountMap} = this
         const that = this
         if (this.errors.items.length > 0) {
@@ -99,21 +102,17 @@ export class InputLockTs extends Vue {
             return
         }
 
-        this.$validator
-            .validate()
-            .then((valid) => {
-                if (!valid) return
-                // no wallet
-                if (!accountMap[currentAccountName].wallets.length) {
-                    that.$router.push('walletCreate')
-                    return
-                }
-                // have wallet and seed ,init wallet
-                that.$store.commit('SET_HAS_WALLET', true)
-                that.$store.commit('SET_WALLET_LIST', accountMap[currentAccountName].wallets)
-                that.$store.commit('SET_WALLET', accountMap[currentAccountName].wallets[0])
-                that.jumpToDashBoard()
-            })
+        
+        // no wallet
+        if (!accountMap[currentAccountName].wallets.length) {
+            that.$router.push('walletCreate')
+            return
+        }
+        // have wallet and seed ,init wallet
+        that.$store.commit('SET_HAS_WALLET', true)
+        that.$store.commit('SET_WALLET_LIST', accountMap[currentAccountName].wallets)
+        that.$store.commit('SET_WALLET', accountMap[currentAccountName].wallets[0])
+        that.jumpToDashBoard()
     }
 
 

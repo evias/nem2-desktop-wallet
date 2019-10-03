@@ -404,6 +404,7 @@ export class AppWallet {
             })
         } catch (err) {
             console.error(err)
+            that.$Notice.error({title: err})
         }
     }
 
