@@ -598,7 +598,7 @@
   "PLACEHOLDER_cipher_hint": "Enter a hint",
   "amount": "Amount",
   "Node_connection_succeeded": "Node connection succeeded",
-  "This_password_is_used_for_importing_the_keystore_file": "This password is used for unlocking your accoounts. Please, make sure to have a backup of this password.",
+  "This_password_is_used_for_importing_the_keystore_file": "This password is used for unlocking your accounts. Please, make sure to have a backup of this password.",
   "timestamp": "Timestamp",
   "sender": "From",
   "HINT_mosaic_list": "Mosaics to be sent",
